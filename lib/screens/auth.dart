@@ -69,13 +69,13 @@ class _AuthScreenState extends State<AuthScreen> {
             email: _enteredEmail, password: _enteredPassword);
 
         final file = await _loadAssetImageToFile(
-            'assets/images/defaultpp.png', 'defaultpp.png');
+            'assets/images/defaultpp.jpg', 'defaultpp.jpg');
 
         if (file.existsSync()) {
           final storageRef = FirebaseStorage.instance
               .ref()
-              .child('user_images')
-              .child('${userCredentials.user!.uid}.png');
+              .child('user_photos')
+              .child('${userCredentials.user!.uid}.jpg');
           await storageRef.putFile(file);
           final imageURL = await storageRef.getDownloadURL();
 
@@ -84,8 +84,8 @@ class _AuthScreenState extends State<AuthScreen> {
               .doc(userCredentials.user!.uid)
               .set({
             'username': _enteredEmail.split('@')[0],
-            'email': _enteredEmail,
             'image_url': imageURL,
+            'status': 'Hello I am using PrivateChat',
           });
         } else {
           throw Exception('Default profile picture file not found.');

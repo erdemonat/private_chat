@@ -86,6 +86,7 @@ class _EditableListTileState extends State<EditableListTile> {
   void _saveChanges() {
     setState(() {
       model.subTitle = _subTitleEditingController.text;
+
       _isEditingMode = false;
     });
 

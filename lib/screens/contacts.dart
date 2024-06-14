@@ -140,7 +140,7 @@ class _ContactsScreenState extends State<ContactsScreen> {
                       style: kUsernameTextStyle(context),
                     ),
                     subtitle: Text(
-                      user['email'],
+                      user['status'],
                       style: kSubTextStyle(context),
                     ),
                     leading: CircleAvatar(
