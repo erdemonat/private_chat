@@ -1,11 +1,9 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:privatechat/constants.dart';
+import 'package:privatechat/theme/constants.dart';
 import 'package:privatechat/screens/chats.dart';
 import 'package:privatechat/screens/contacts.dart';
-import 'package:privatechat/screens/profile.dart';
-import 'package:privatechat/screens/settings.dart';
-import 'package:privatechat/util/bottom_nav_bar.dart';
+import 'package:privatechat/components/bottom_nav_bar.dart';
+import 'package:privatechat/components/home_popupmenu.dart';
 
 enum SampleItem { settings, logout }
 
@@ -27,7 +25,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   final List<Widget> _pages = [
     ChatsScreen(),
-    ContactsScreen(),
+    const ContactsScreen(),
   ];
 
   @override
@@ -39,44 +37,8 @@ class _HomeScreenState extends State<HomeScreen> {
           child: Divider(height: 1),
         ),
         backgroundColor: Colors.transparent,
-        actions: [
-          PopupMenuButton(
-            enableFeedback: true,
-            position: PopupMenuPosition.under,
-            itemBuilder: (BuildContext context) {
-              return <PopupMenuEntry<SampleItem>>[
-                PopupMenuItem<SampleItem>(
-                  value: SampleItem.settings,
-                  child: const Text('Profile'),
-                  onTap: () {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => ProfileScreen(),
-                        ));
-                  },
-                ),
-                PopupMenuItem<SampleItem>(
-                  value: SampleItem.settings,
-                  child: const Text('Settings'),
-                  onTap: () {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const SettingsScreen(),
-                        ));
-                  },
-                ),
-                PopupMenuItem<SampleItem>(
-                  value: SampleItem.logout,
-                  child: const Text('Logout'),
-                  onTap: () {
-                    FirebaseAuth.instance.signOut();
-                  },
-                ),
-              ];
-            },
-          )
+        actions: const [
+          HomePopupButtonMenu(),
         ],
         centerTitle: false,
         title: Padding(

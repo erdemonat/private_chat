@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:privatechat/constants.dart';
-import 'package:privatechat/theme/theme_provider.dart';
-import 'package:privatechat/util/my_dropdown_menu.dart';
-import 'package:provider/provider.dart';
+import 'package:privatechat/theme/constants.dart';
+import 'package:privatechat/components/theme_setting_tile.dart';
 
 class SettingsScreen extends StatelessWidget {
   const SettingsScreen({super.key});
@@ -21,23 +19,11 @@ class SettingsScreen extends StatelessWidget {
           style: kTitleText,
         ),
       ),
-      body: Container(
-        padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 12),
-        margin: const EdgeInsets.symmetric(vertical: 20, horizontal: 10),
-        decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(8),
-            color: Theme.of(context).colorScheme.primary),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      body: const Padding(
+        padding: EdgeInsets.only(top: 25),
+        child: Column(
           children: [
-            Text(
-              'Theme',
-              style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                  color: Theme.of(context).colorScheme.inversePrimary),
-            ),
-            const MyDropdownButtonMenu(),
+            ThemeSettingTile(),
           ],
         ),
       ),

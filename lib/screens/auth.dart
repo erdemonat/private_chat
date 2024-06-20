@@ -7,8 +7,9 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/services.dart';
 
 import 'package:path_provider/path_provider.dart';
+import 'package:privatechat/model/auth_form.dart';
 
-import 'package:privatechat/constants.dart';
+import 'package:privatechat/theme/constants.dart';
 
 final _firebase = FirebaseAuth.instance;
 
@@ -47,7 +48,7 @@ class _AuthScreenState extends State<AuthScreen> {
     return File(path);
   }
 
-  void _submit() async {
+  Future<void> _submit() async {
     final isValid = _formKey.currentState!.validate();
 
     if (!isValid) {
@@ -124,141 +125,65 @@ class _AuthScreenState extends State<AuthScreen> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              const Icon(Icons.bubble_chart, size: 154),
-              Padding(
-                padding: const EdgeInsets.only(top: 10, bottom: 48),
-                child: Text(
-                  'Private Chat',
-                  style: kTitleText,
-                ),
-              ),
-              Form(
-                key: _formKey,
-                child: Column(
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 24, vertical: 8),
-                      child: TextFormField(
-                        keyboardType: TextInputType.emailAddress,
-                        validator: (value) {
-                          if (value == null ||
-                              value.trim().isEmpty ||
-                              !value.contains('@')) {
-                            return 'Please enter a valid email address';
-                          }
-                          return null;
-                        },
-                        onSaved: (value) {
-                          _enteredEmail = value!;
-                        },
-                        decoration: kTextFormFieldDecoration(context)
-                            .copyWith(labelText: "Email"),
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 24, vertical: 8),
-                      child: TextFormField(
-                        controller: _passwordController,
-                        obscureText: _isObscureText,
-                        onSaved: (value) {
-                          _enteredPassword = value!;
-                        },
-                        validator: (value) {
-                          if (value == null || value.trim().length < 6) {
-                            return 'Password must be at least 6 characters long';
-                          }
-                          return null;
-                        },
-                        decoration: kTextFormFieldDecoration(context).copyWith(
-                            labelText: "Password",
-                            suffixIcon: IconButton(
-                              icon: Icon(
-                                _isObscureText
-                                    ? Icons.visibility
-                                    : Icons.visibility_off,
-                              ),
-                              onPressed: () {
-                                setState(() {
-                                  _isObscureText = !_isObscureText;
-                                });
-                              },
-                            )),
-                      ),
-                    ),
-                    if (!_isLogin)
-                      Padding(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 24, vertical: 8),
-                        child: TextFormField(
-                          controller: _confirmPasswordController,
-                          obscureText: _isObscureTextConfirm,
-                          onSaved: (value) {
-                            _enteredConfirmPassword = value!;
-                          },
-                          validator: (value) {
-                            if (value != _passwordController.text) {
-                              return 'The passwords must match.';
-                            }
-                            return null;
-                          },
-                          decoration:
-                              kTextFormFieldDecoration(context).copyWith(
-                                  labelText: "Confirm Password",
-                                  suffixIcon: IconButton(
-                                    icon: Icon(
-                                      _isObscureTextConfirm
-                                          ? Icons.visibility
-                                          : Icons.visibility_off,
-                                    ),
-                                    onPressed: () {
-                                      setState(() {
-                                        _isObscureTextConfirm =
-                                            !_isObscureTextConfirm;
-                                      });
-                                    },
-                                  )),
-                        ),
-                      ),
-                    if (_isAuthenticating) const CircularProgressIndicator(),
-                    if (!_isAuthenticating)
-                      Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 20),
-                        child: ElevatedButton(
-                          onPressed: () {
-                            _submit();
-                            FocusScope.of(context).unfocus();
-                          },
-                          style: kButtonStyleAuth,
-                          child: Text(
-                            _isLogin ? 'Login' : 'Signup',
-                            style: TextStyle(
-                                color: Theme.of(context).colorScheme.tertiary),
-                          ),
-                        ),
-                      ),
-                    TextButton(
-                      onPressed: () {
-                        setState(() {
-                          _isLogin = !_isLogin;
-                        });
-                      },
-                      child: Text(
-                        _isLogin
-                            ? 'Create an account'
-                            : 'Already have an account',
-                        style: TextStyle(
-                            color: Theme.of(context).colorScheme.tertiary),
-                      ),
-                    ),
-                  ],
-                ),
+              const AuthIcon(),
+              AuthForm(
+                formKey: _formKey,
+                isLogin: _isLogin,
+                isAuthenticating: _isAuthenticating,
+                passwordController: _passwordController,
+                confirmPasswordController: _confirmPasswordController,
+                onToggleLoginMode: () {
+                  setState(() {
+                    _isLogin = !_isLogin;
+                  });
+                },
+                onSubmit: _submit,
+                onEmailSaved: (value) {
+                  _enteredEmail = value!;
+                },
+                onPasswordSaved: (value) {
+                  _enteredPassword = value!;
+                },
+                onConfirmPasswordSaved: (value) {
+                  _enteredConfirmPassword = value!;
+                },
+                isObscureText: _isObscureText,
+                toggleObscureText: () {
+                  setState(() {
+                    _isObscureText = !_isObscureText;
+                  });
+                },
+                isObscureTextConfirm: _isObscureTextConfirm,
+                toggleObscureTextConfirm: () {
+                  setState(() {
+                    _isObscureTextConfirm = !_isObscureTextConfirm;
+                  });
+                },
               ),
             ],
           ),
         ),
       ),
+    );
+  }
+}
+
+class AuthIcon extends StatelessWidget {
+  const AuthIcon({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        const Icon(Icons.bubble_chart, size: 154),
+        Padding(
+          padding: const EdgeInsets.only(top: 10, bottom: 48),
+          child: Text(
+            'Private Chat',
+            style: kTitleText,
+          ),
+        ),
+      ],
     );
   }
 }

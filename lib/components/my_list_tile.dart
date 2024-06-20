@@ -45,15 +45,6 @@ class _EditableListTileState extends State<EditableListTile> {
     );
   }
 
-  Widget get _titleTextField {
-    return TextField(
-      controller: _titleEditingController,
-      decoration: const InputDecoration(
-        hintText: 'Title',
-      ),
-    );
-  }
-
   Widget get _subTitleTextField {
     return TextField(
       controller: _subTitleEditingController,

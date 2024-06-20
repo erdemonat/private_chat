@@ -11,8 +11,7 @@ enum AppTheme {
 }
 
 class ThemeProvider with ChangeNotifier {
-  final IsarService _isarService = IsarService();
-  // initially, theme is light mode
+  final IsarService isarService = IsarService();
   ThemeData _themeData = blackTheme;
   final Map<AppTheme, ThemeData> _themes = {
     AppTheme.black: blackTheme,
@@ -26,17 +25,13 @@ class ThemeProvider with ChangeNotifier {
 
   AppTheme _selectedTheme = AppTheme.black;
 
-  // getter method to access the theme from other parts of the code
+  // Getter for current theme data
   ThemeData get themeData => _themeData;
 
-  // setter method to set the new theme
-  set themeData(ThemeData themeData) {
-    _themeData = themeData;
-    notifyListeners();
-  }
-
+  // Getter for selected theme
   AppTheme get selectedTheme => _selectedTheme;
 
+  // Setter for selected theme
   set selectedTheme(AppTheme theme) {
     _selectedTheme = theme;
     _themeData = _themes[theme]!;
@@ -44,12 +39,9 @@ class ThemeProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  void setTheme(AppTheme theme) {
-    selectedTheme = theme;
-  }
-
+  // Load theme from local storage
   Future<void> _loadTheme() async {
-    final isar = await _isarService.db;
+    final isar = await isarService.db;
     final themeItem = await isar.themeSettings.where().findFirst();
     if (themeItem != null) {
       _selectedTheme = AppTheme.values
@@ -59,10 +51,11 @@ class ThemeProvider with ChangeNotifier {
     notifyListeners();
   }
 
+  // Save theme to local storage
   Future<void> _saveTheme(AppTheme theme) async {
-    final isar = await _isarService.db;
+    final isar = await isarService.db;
     await isar.writeTxn(() async {
-      await isar.themeSettings.clear(); // Eski temayı temizle
+      await isar.themeSettings.clear(); // Clear old theme
       final themeItem = ThemeSettings()
         ..themeName = theme.toString().split('.').last;
       await isar.themeSettings.put(themeItem);

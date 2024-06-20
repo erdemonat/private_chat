@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:intl/intl.dart';
-import 'package:privatechat/constants.dart';
-import 'package:privatechat/util/new_message.dart';
+import 'package:privatechat/theme/constants.dart';
+import 'package:privatechat/components/new_message.dart';
 
 class ChatScreen extends StatefulWidget {
   final String recipientUserId;
@@ -23,11 +23,13 @@ class _ChatScreenState extends State<ChatScreen> {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final FirebaseAuth _auth = FirebaseAuth.instance;
   String? recipientImageUrl;
+  String? chatRoomId;
 
   @override
   void initState() {
     super.initState();
     _loadRecipientData();
+    _createChatRoom();
   }
 
   void _loadRecipientData() async {
@@ -38,6 +40,44 @@ class _ChatScreenState extends State<ChatScreen> {
       setState(() {
         recipientImageUrl = recipientUserDoc['image_url'];
       });
+    }
+  }
+
+  void _createChatRoom() async {
+    var userId1 = _auth.currentUser!.uid;
+    var userId2 = widget.recipientUserId;
+    chatRoomId = getChatRoomId(userId1, userId2);
+    createChatRoom(userId1, userId2);
+  }
+
+  void createChatRoom(String userId1, String userId2) async {
+    var chatRoomId = getChatRoomId(userId1, userId2);
+    var chatRoomData = {
+      'participants': [userId1, userId2],
+    };
+
+    await _firestore.collection('chats').doc(chatRoomId).set(chatRoomData);
+  }
+
+  String getChatRoomId(String userId1, String userId2) {
+    List<String> ids = [userId1, userId2];
+    ids.sort();
+    return ids.join('-');
+  }
+
+  void sendMessage(String messageText) async {
+    if (chatRoomId != null) {
+      var messageData = {
+        'text': messageText,
+        'senderId': _auth.currentUser!.uid,
+        'timestamp': FieldValue.serverTimestamp(),
+      };
+
+      await _firestore
+          .collection('chats')
+          .doc(chatRoomId)
+          .collection('messages')
+          .add(messageData);
     }
   }
 
@@ -89,12 +129,14 @@ class _ChatScreenState extends State<ChatScreen> {
           children: [
             Expanded(
               child: StreamBuilder<QuerySnapshot>(
-                stream: _firestore
-                    .collection('chats')
-                    .doc(getChatRoomId())
-                    .collection('messages')
-                    .orderBy('timestamp', descending: true)
-                    .snapshots(),
+                stream: chatRoomId != null
+                    ? _firestore
+                        .collection('chats')
+                        .doc(chatRoomId)
+                        .collection('messages')
+                        .orderBy('timestamp', descending: true)
+                        .snapshots()
+                    : Stream.empty(),
                 builder: (context, snapshot) {
                   if (!snapshot.hasData) {
                     return const Center(child: CircularProgressIndicator());
@@ -129,31 +171,5 @@ class _ChatScreenState extends State<ChatScreen> {
         ),
       ),
     );
-  }
-
-  void sendMessage(String messageText) {
-    if (messageText.isNotEmpty) {
-      var chatRoomId = getChatRoomId();
-      var message = {
-        'text': messageText,
-        'sender': widget.recipientUsername,
-        'timestamp': FieldValue.serverTimestamp(),
-      };
-
-      _firestore
-          .collection('chats')
-          .doc(chatRoomId)
-          .collection('messages')
-          .add(message);
-    }
-  }
-
-  String getChatRoomId() {
-    var currentUser = _auth.currentUser!;
-    var otherUser = widget.recipientUserId;
-
-    List<String> ids = [currentUser.uid, otherUser];
-    ids.sort();
-    return ids.join('-');
   }
 }

@@ -4,6 +4,8 @@ import 'package:privatechat/screens/auth.dart';
 import 'package:privatechat/screens/home.dart';
 
 class IntroScreen extends StatefulWidget {
+  const IntroScreen({super.key});
+
   @override
   _IntroScreenState createState() => _IntroScreenState();
 }
