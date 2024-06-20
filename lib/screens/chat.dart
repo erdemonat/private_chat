@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:intl/intl.dart';
 import 'package:privatechat/constants.dart';
 import 'package:privatechat/util/new_message.dart';
 
@@ -74,7 +75,9 @@ class _ChatScreenState extends State<ChatScreen> {
               width: 12,
             ),
             Text(
-              widget.recipientUsername,
+              (widget.recipientUserId == _auth.currentUser!.uid
+                  ? 'You'
+                  : widget.recipientUsername),
               style: kTitleText,
             )
           ],
@@ -104,10 +107,17 @@ class _ChatScreenState extends State<ChatScreen> {
                     itemCount: messages.length,
                     itemBuilder: (context, index) {
                       var message = messages[index];
+                      var timestamp = message['timestamp'];
+                      var timeString = '';
+
+                      if (timestamp != null) {
+                        var dateTime = timestamp.toDate();
+                        timeString = DateFormat('HH:mm').format(dateTime);
+                      }
 
                       return ListTile(
                         title: Text(message['text']),
-                        subtitle: Text(message['sender']),
+                        subtitle: Text(timeString),
                       );
                     },
                   );

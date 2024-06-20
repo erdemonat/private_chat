@@ -25,7 +25,7 @@ class _ContactsScreenState extends State<ContactsScreen> {
         bottom: PreferredSize(
           preferredSize: const Size.fromHeight(24),
           child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 25),
+            padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 4),
             child: TextField(
               controller: searchController,
               decoration: InputDecoration(
@@ -36,7 +36,8 @@ class _ContactsScreenState extends State<ContactsScreen> {
                   borderSide: BorderSide.none,
                 ),
                 filled: true,
-                fillColor: Theme.of(context).inputDecorationTheme.fillColor,
+                fillColor:
+                    Theme.of(context).colorScheme.primary.withOpacity(0.5),
               ),
               onChanged: (value) {
                 setState(() {
@@ -72,32 +73,24 @@ class _ContactsScreenState extends State<ContactsScreen> {
               searchController.text.toLowerCase())) {
             return Center(
               child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
+                //crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  SizedBox(
-                    height: 150,
-                    child: Image.asset(
-                      'assets/images/ghost.png',
-                      color: Theme.of(context)
-                          .colorScheme
-                          .primary
-                          .withOpacity(0.3),
+                  Flexible(
+                    child: SizedBox(
+                      height: 150,
+                      child: Image.asset(
+                        'assets/images/ghost.png',
+                        color: Theme.of(context)
+                            .colorScheme
+                            .primary
+                            .withOpacity(0.3),
+                      ),
                     ),
                   ),
-                  /*Text(
-                    ':( ',
-                    style: TextStyle(
-                      fontSize: 55,
-                      color: Theme.of(context)
-                          .colorScheme
-                          .primary
-                          .withOpacity(0.3),
-                    ),
-                  ),*/
                   const SizedBox(height: 20),
                   Text(
-                    'No contacts here',
+                    'No contact here',
                     style: TextStyle(
                       fontSize: 22,
                       color: Theme.of(context)
@@ -144,8 +137,14 @@ class _ContactsScreenState extends State<ContactsScreen> {
                       style: kSubTextStyle(context),
                     ),
                     leading: CircleAvatar(
-                      child: Image.network(
-                        user['image_url'],
+                      radius: 24,
+                      child: ClipOval(
+                        child: Image.network(
+                          width: 48,
+                          height: 48,
+                          user['image_url'],
+                          fit: BoxFit.cover,
+                        ),
                       ),
                     ),
                   );

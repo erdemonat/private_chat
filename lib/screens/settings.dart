@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:privatechat/constants.dart';
 import 'package:privatechat/theme/theme_provider.dart';
+import 'package:privatechat/util/my_dropdown_menu.dart';
 import 'package:provider/provider.dart';
 
 class SettingsScreen extends StatelessWidget {
@@ -36,32 +37,7 @@ class SettingsScreen extends StatelessWidget {
                   fontWeight: FontWeight.bold,
                   color: Theme.of(context).colorScheme.inversePrimary),
             ),
-            DropdownButton<AppTheme>(
-              elevation: 0,
-              icon: const Icon(Icons.arrow_drop_down_rounded),
-              iconSize: 36,
-              alignment: Alignment.center,
-              underline: const SizedBox(),
-              dropdownColor: Theme.of(context).colorScheme.secondary,
-              iconEnabledColor: Theme.of(context).colorScheme.tertiary,
-              style: TextStyle(
-                color: Theme.of(context).colorScheme.inversePrimary,
-                fontSize: 15,
-                fontWeight: FontWeight.w600,
-              ),
-              value: context.watch<ThemeProvider>().selectedTheme,
-              onChanged: (value) {
-                if (value != null) {
-                  context.read<ThemeProvider>().setTheme(value);
-                }
-              },
-              items: AppTheme.values.map((AppTheme theme) {
-                return DropdownMenuItem<AppTheme>(
-                  value: theme,
-                  child: Text(theme.toString().split('.').last),
-                );
-              }).toList(),
-            ),
+            const MyDropdownButtonMenu(),
           ],
         ),
       ),

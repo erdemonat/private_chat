@@ -2,6 +2,8 @@
 import 'package:flutter/material.dart';
 
 ThemeData blackTheme = ThemeData(
+  scaffoldBackgroundColor: Colors.grey.shade900,
+  dialogBackgroundColor: Colors.grey.shade900,
   focusColor: Colors.grey.shade300,
   dividerColor: Colors.grey.shade300,
   highlightColor: Colors.grey.shade300,
@@ -18,6 +20,9 @@ ThemeData blackTheme = ThemeData(
 
 // light mode
 ThemeData whiteTheme = ThemeData(
+  scaffoldBackgroundColor: Colors.grey.shade300,
+  dialogBackgroundColor: Colors.grey.shade300,
+  focusColor: Colors.grey.shade900,
   dividerColor: Colors.grey.shade900,
   highlightColor: Colors.grey.shade900,
   colorScheme: ColorScheme.light(

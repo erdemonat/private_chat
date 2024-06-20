@@ -12,7 +12,7 @@ class ChatsScreen extends StatefulWidget {
 
 class _ChatsScreenState extends State<ChatsScreen> {
   final FirebaseFirestore _db = FirebaseFirestore.instance;
-  final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
+  final FirebaseAuth _auth = FirebaseAuth.instance;
 
   @override
   Widget build(BuildContext context) {
@@ -70,7 +70,7 @@ class _ChatsScreenState extends State<ChatsScreen> {
   }
 
   String getRecipientUserId(String chatRoomId) {
-    var currentUser = _firebaseAuth.currentUser!;
+    var currentUser = _auth.currentUser!;
     var userIds = chatRoomId.split('-');
     return userIds.firstWhere((id) => id != currentUser.uid);
   }

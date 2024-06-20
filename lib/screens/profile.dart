@@ -7,7 +7,6 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:privatechat/constants.dart';
 import 'package:privatechat/model/my_list_tile_model.dart';
-import 'package:privatechat/screens/auth.dart';
 import 'package:privatechat/util/my_list_tile.dart';
 
 class ProfileScreen extends StatefulWidget {
@@ -212,7 +211,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
     try {
       // 1. Kullanıcının resim seçmesini sağla
-      final pickedFile = await picker.pickImage(source: ImageSource.gallery);
+      final pickedFile = await picker.pickImage(
+        source: ImageSource.gallery,
+        imageQuality: 50,
+        maxHeight: 400,
+        maxWidth: 400,
+      );
 
       if (pickedFile == null) {
         ScaffoldMessenger.of(context).showSnackBar(
