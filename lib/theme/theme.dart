@@ -1,7 +1,9 @@
 // dark mode
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 ThemeData blackTheme = ThemeData(
+  textTheme: GoogleFonts.poppinsTextTheme(),
   scaffoldBackgroundColor: Colors.grey.shade900,
   dialogBackgroundColor: Colors.grey.shade900,
   focusColor: Colors.grey.shade300,
@@ -20,6 +22,7 @@ ThemeData blackTheme = ThemeData(
 
 // light mode
 ThemeData whiteTheme = ThemeData(
+  textTheme: GoogleFonts.poppinsTextTheme(),
   scaffoldBackgroundColor: Colors.grey.shade300,
   dialogBackgroundColor: Colors.grey.shade300,
   focusColor: Colors.grey.shade900,
@@ -37,6 +40,7 @@ ThemeData whiteTheme = ThemeData(
 );
 
 ThemeData highContrastTheme = ThemeData(
+  textTheme: GoogleFonts.poppinsTextTheme(),
   scaffoldBackgroundColor: Colors.black,
   dialogBackgroundColor: Colors.black,
   dividerColor: Colors.black,

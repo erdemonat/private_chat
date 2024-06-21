@@ -18,39 +18,28 @@ class MyPopupMenuButton extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 8.0),
       child: PopupMenuButton<AppTheme>(
+        offset: const Offset(35, 0),
+        position: PopupMenuPosition.under,
         itemBuilder: (BuildContext context) {
-          return AppTheme.values.map((AppTheme theme) {
-            bool isSelected = selectedTheme == theme;
+          return AppTheme.values
+              .where((AppTheme theme) => theme != selectedTheme)
+              .map((AppTheme theme) {
             return PopupMenuItem<AppTheme>(
               value: theme,
               child: Container(
-                width: double.infinity,
-                decoration: BoxDecoration(
-                  color: isSelected
-                      ? Theme.of(context).colorScheme.secondary.withOpacity(0.2)
-                      : null,
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                padding:
-                    const EdgeInsets.symmetric(vertical: 8, horizontal: 20),
+                padding: const EdgeInsets.symmetric(horizontal: 42),
+                //margin: EdgeInsets.symmetric(horizontal: 42),
                 child: Row(
                   children: [
                     Expanded(
                       child: Text(
                         formatThemeName(theme),
                         style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                              color: isSelected
-                                  ? Theme.of(context).colorScheme.inversePrimary
-                                  : Theme.of(context).colorScheme.secondary,
+                              color: Theme.of(context).colorScheme.tertiary,
                               fontWeight: FontWeight.w600,
                             ),
                       ),
                     ),
-                    if (isSelected)
-                      Icon(
-                        Icons.check,
-                        color: Theme.of(context).colorScheme.inversePrimary,
-                      ),
                   ],
                 ),
               ),
@@ -65,18 +54,21 @@ class MyPopupMenuButton extends StatelessWidget {
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(8),
         ),
-        child: TextButton.icon(
-          onPressed:
-              null, // Bu, tıklanabilirliği PopupMenuButton tarafından kontrol edilir
-          icon: Icon(
-            Icons.arrow_drop_down_rounded,
-            color: Theme.of(context).colorScheme.inversePrimary,
-          ),
-          label: Text(
-            formatThemeName(selectedTheme),
-            style: TextStyle(
+        child: Directionality(
+          textDirection: TextDirection.rtl,
+          child: TextButton.icon(
+            onPressed:
+                null, // Bu, tıklanabilirliği PopupMenuButton tarafından kontrol edilir
+            icon: Icon(
+              Icons.arrow_drop_down_rounded,
               color: Theme.of(context).colorScheme.inversePrimary,
-              fontWeight: FontWeight.w600,
+            ),
+            label: Text(
+              formatThemeName(selectedTheme),
+              style: TextStyle(
+                color: Theme.of(context).colorScheme.inversePrimary,
+                fontWeight: FontWeight.w600,
+              ),
             ),
           ),
         ),

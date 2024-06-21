@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -105,11 +106,18 @@ class _ChatScreenState extends State<ChatScreen> {
         title: Row(
           children: [
             CircleAvatar(
-              backgroundImage: recipientImageUrl != null
-                  ? NetworkImage(recipientImageUrl!)
-                  : null,
-              child:
-                  recipientImageUrl == null ? const Icon(Icons.person) : null,
+              child: recipientImageUrl != null
+                  ? CachedNetworkImage(
+                      imageUrl: recipientImageUrl!,
+                      placeholder: (context, url) =>
+                          const CircularProgressIndicator(),
+                      errorWidget: (context, url, error) =>
+                          const Icon(Icons.error),
+                      imageBuilder: (context, imageProvider) => CircleAvatar(
+                        backgroundImage: imageProvider,
+                      ),
+                    )
+                  : const CircularProgressIndicator(),
             ),
             const SizedBox(
               width: 12,
