@@ -40,7 +40,7 @@ class _IntroScreenState extends State<IntroScreen>
   }
 
   _navigateToHome() async {
-    await Future.delayed(const Duration(milliseconds: 4000), () {});
+    await Future.delayed(const Duration(milliseconds: 1400), () {});
     Navigator.pushReplacement(
         context,
         MaterialPageRoute(

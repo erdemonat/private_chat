@@ -23,19 +23,19 @@ ThemeData blackTheme = ThemeData(
 // light mode
 ThemeData whiteTheme = ThemeData(
   textTheme: GoogleFonts.poppinsTextTheme(),
-  scaffoldBackgroundColor: Colors.grey.shade300,
+  scaffoldBackgroundColor: Colors.grey.shade200,
   dialogBackgroundColor: Colors.grey.shade300,
   focusColor: Colors.grey.shade900,
   dividerColor: Colors.grey.shade900,
   highlightColor: Colors.grey.shade900,
   colorScheme: ColorScheme.light(
-    surface: Colors.grey.shade300,
-    primary: Colors.grey.shade400,
-    secondary: Colors.grey.shade200,
+    surface: Colors.grey.shade200,
+    primary: Colors.grey.shade500,
+    secondary: Colors.grey.shade700,
     tertiary: Colors.grey.shade900,
     inversePrimary: Colors.grey.shade900,
     onSurface: Colors.grey.shade900,
-    outlineVariant: Colors.grey.shade500,
+    outlineVariant: Colors.grey.shade800,
   ),
 );
 

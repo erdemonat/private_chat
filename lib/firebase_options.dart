@@ -59,4 +59,5 @@ class DefaultFirebaseOptions {
     projectId: 'privatechat-2a0f6',
     storageBucket: 'privatechat-2a0f6.appspot.com',
   );
+
 }

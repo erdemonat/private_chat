@@ -95,8 +95,12 @@ class _ChatsScreenState extends State<ChatsScreen> {
               var participants = chatDoc['participants'] as List<dynamic>;
 
               var currentUser = _auth.currentUser!;
-              var recipientUserId =
-                  participants.firstWhere((id) => id != currentUser.uid);
+              var recipientUserId = participants.length == 1
+                  ? currentUser.uid
+                  : participants.firstWhere(
+                      (id) => id != currentUser.uid,
+                      orElse: () => currentUser.uid,
+                    );
 
               return FutureBuilder<List<dynamic>>(
                 future: Future.wait([
@@ -170,8 +174,14 @@ class _ChatsScreenState extends State<ChatsScreen> {
                           ),
                         ),
                       ),
-                      title: Text(username),
-                      subtitle: Text(lastMessage),
+                      title: Text(
+                        recipientUserId != currentUser.uid ? username : 'You',
+                      ),
+                      subtitle: Text(
+                        lastMessage,
+                        overflow: TextOverflow.ellipsis,
+                        maxLines: 1,
+                      ),
                       onTap: () {
                         Navigator.of(context).push(
                           MaterialPageRoute(

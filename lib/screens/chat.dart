@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:intl/intl.dart';
+import 'package:privatechat/components/message_bubble.dart';
 import 'package:privatechat/theme/constants.dart';
 import 'package:privatechat/components/new_message.dart';
 
@@ -25,6 +26,10 @@ class _ChatScreenState extends State<ChatScreen> {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   String? recipientImageUrl;
   String? chatRoomId;
+
+  bool isMe(String senderId) {
+    return _auth.currentUser != null && senderId == _auth.currentUser!.uid;
+  }
 
   @override
   void initState() {
@@ -61,9 +66,13 @@ class _ChatScreenState extends State<ChatScreen> {
   }
 
   String getChatRoomId(String userId1, String userId2) {
-    List<String> ids = [userId1, userId2];
-    ids.sort();
-    return ids.join('-');
+    if (userId1 == userId2) {
+      return '$userId1-ownnotes';
+    } else {
+      List<String> ids = [userId1, userId2];
+      ids.sort();
+      return ids.join('-');
+    }
   }
 
   void sendMessage(String messageText) async {
@@ -131,51 +140,70 @@ class _ChatScreenState extends State<ChatScreen> {
           ],
         ),
       ),
-      body: SafeArea(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Expanded(
-              child: StreamBuilder<QuerySnapshot>(
-                stream: chatRoomId != null
-                    ? _firestore
-                        .collection('chats')
-                        .doc(chatRoomId)
-                        .collection('messages')
-                        .orderBy('timestamp', descending: true)
-                        .snapshots()
-                    : Stream.empty(),
-                builder: (context, snapshot) {
-                  if (!snapshot.hasData) {
-                    return const Center(child: CircularProgressIndicator());
-                  }
+      body: Container(
+        decoration: BoxDecoration(
+            gradient: LinearGradient(colors: [
+              Theme.of(context).colorScheme.primary.withOpacity(0.3),
+              Theme.of(context).colorScheme.secondary.withOpacity(0.3),
+            ], begin: Alignment.topLeft, end: Alignment.bottomRight),
+            image: DecorationImage(
+              image: const AssetImage(
+                'assets/images/chat-back-3.png',
+              ), // Buraya resim yolunu yazın
+              colorFilter: ColorFilter.mode(
+                  Theme.of(context).colorScheme.surface, BlendMode.srcATop),
 
-                  var messages = snapshot.data!.docs;
+              fit: BoxFit.cover,
+            )),
+        child: SafeArea(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Expanded(
+                child: StreamBuilder<QuerySnapshot>(
+                  stream: chatRoomId != null
+                      ? _firestore
+                          .collection('chats')
+                          .doc(chatRoomId)
+                          .collection('messages')
+                          .orderBy('timestamp', descending: true)
+                          .snapshots()
+                      : const Stream.empty(),
+                  builder: (context, snapshot) {
+                    if (!snapshot.hasData) {
+                      return const Center(child: CircularProgressIndicator());
+                    }
 
-                  return ListView.builder(
-                    reverse: true,
-                    itemCount: messages.length,
-                    itemBuilder: (context, index) {
-                      var message = messages[index];
-                      var timestamp = message['timestamp'];
-                      var timeString = '';
+                    var messages = snapshot.data!.docs;
 
-                      if (timestamp != null) {
-                        var dateTime = timestamp.toDate();
-                        timeString = DateFormat('HH:mm').format(dateTime);
-                      }
+                    return ListView.builder(
+                      reverse: true,
+                      itemCount: messages.length,
+                      itemBuilder: (context, index) {
+                        var message = messages[index];
+                        var timestamp = message['timestamp'];
+                        var timeString = '';
 
-                      return ListTile(
-                        title: Text(message['text']),
-                        subtitle: Text(timeString),
-                      );
-                    },
-                  );
-                },
+                        if (timestamp != null) {
+                          var dateTime = timestamp.toDate();
+                          timeString = DateFormat('HH:mm').format(dateTime);
+                        }
+
+                        var senderId = message['senderId'];
+                        bool sentByMe = isMe(senderId);
+
+                        return MessageBubble(
+                            sentByMe: sentByMe,
+                            message: message,
+                            timeString: timeString);
+                      },
+                    );
+                  },
+                ),
               ),
-            ),
-            NewMessage(onSendMessage: sendMessage),
-          ],
+              NewMessage(onSendMessage: sendMessage),
+            ],
+          ),
         ),
       ),
     );
