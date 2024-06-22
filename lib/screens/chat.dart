@@ -76,7 +76,7 @@ class _ChatScreenState extends State<ChatScreen> {
   }
 
   void sendMessage(String messageText) async {
-    if (chatRoomId != null) {
+    if (chatRoomId != null && messageText.isNotEmpty) {
       var messageData = {
         'text': messageText,
         'senderId': _auth.currentUser!.uid,
