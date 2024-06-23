@@ -71,6 +71,7 @@ class _IntroScreenState extends State<IntroScreen>
 
   @override
   Widget build(BuildContext context) {
+    bool isLightTheme = Theme.of(context).brightness == Brightness.light;
     return Scaffold(
       body: SafeArea(
         child: Padding(
@@ -85,8 +86,10 @@ class _IntroScreenState extends State<IntroScreen>
                     ScaleTransition(
                       scale: _scaleAnimation,
                       child: Image.asset(
-                        'assets/images/logo-vector.png',
-                        color: Theme.of(context).colorScheme.inversePrimary,
+                        isLightTheme
+                            ? 'assets/images/logo-vector-light.png'
+                            : 'assets/images/logo-vector-dark.png',
+                        color: Theme.of(context).colorScheme.tertiary,
                         width: 220,
                       ),
                     ),

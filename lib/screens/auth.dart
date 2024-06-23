@@ -175,22 +175,24 @@ class AuthIcon extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Image.asset(
-          'assets/images/logo-vector.png',
-          color: Theme.of(context).colorScheme.inversePrimary,
-          width: 220,
-        ),
-        Padding(
-          padding: const EdgeInsets.only(top: 10, bottom: 48),
-          child: Text(
+    bool isLightTheme = Theme.of(context).brightness == Brightness.light;
+    return SafeArea(
+      child: Column(
+        children: [
+          Image.asset(
+            isLightTheme
+                ? 'assets/images/logo-vector-light.png'
+                : 'assets/images/logo-vector-dark.png',
+            color: Theme.of(context).colorScheme.tertiary,
+            width: 220,
+          ),
+          Text(
             'TapC',
             style: kTitleText.copyWith(
                 color: Theme.of(context).colorScheme.secondary),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 }

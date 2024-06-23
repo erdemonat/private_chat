@@ -94,8 +94,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
     return showDialog<String>(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('Re-enter your password'),
+        title: Text(
+          'Re-enter your password',
+          style: TextStyle(color: Theme.of(context).colorScheme.tertiary),
+        ),
         content: TextField(
+          style: TextStyle(color: Theme.of(context).colorScheme.tertiary),
           controller: _passwordController,
           decoration: const InputDecoration(hintText: 'Password'),
           obscureText: true,

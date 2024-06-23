@@ -88,6 +88,11 @@ class _ChatScreenState extends State<ChatScreen> {
           .doc(chatRoomId)
           .collection('messages')
           .add(messageData);
+
+      await _firestore
+          .collection('chats')
+          .doc(chatRoomId)
+          .update({'lastMessageTimestamp': FieldValue.serverTimestamp()});
     }
   }
 

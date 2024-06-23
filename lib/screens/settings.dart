@@ -16,7 +16,7 @@ class SettingsScreen extends StatelessWidget {
         ),
         title: Text(
           'Settings',
-          style: kTitleText,
+          style: kAppbarTitle,
         ),
       ),
       body: const Padding(

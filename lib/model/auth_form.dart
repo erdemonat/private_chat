@@ -43,7 +43,7 @@ class AuthForm extends StatelessWidget {
       child: Column(
         children: [
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 8),
+            padding: const EdgeInsets.only(right: 24, left: 24, top: 4),
             child: TextFormField(
               style: TextStyle(
                   color: Theme.of(context).colorScheme.tertiary,
@@ -63,7 +63,7 @@ class AuthForm extends StatelessWidget {
             ),
           ),
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 8),
+            padding: const EdgeInsets.only(right: 24, left: 24, top: 10),
             child: TextFormField(
               style: TextStyle(
                   color: Theme.of(context).colorScheme.tertiary,
@@ -79,18 +79,22 @@ class AuthForm extends StatelessWidget {
               },
               decoration: kTextFormFieldDecoration(context).copyWith(
                 labelText: "Password",
-                suffixIcon: IconButton(
-                  icon: Icon(
-                    isObscureText ? Icons.visibility : Icons.visibility_off,
-                  ),
-                  onPressed: toggleObscureText,
-                ),
+                suffixIcon: passwordController.text.isNotEmpty
+                    ? IconButton(
+                        icon: Icon(
+                          isObscureText
+                              ? Icons.visibility
+                              : Icons.visibility_off,
+                        ),
+                        onPressed: toggleObscureText,
+                      )
+                    : null,
               ),
             ),
           ),
           if (!isLogin)
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 8),
+              padding: const EdgeInsets.only(right: 24, left: 24, top: 10),
               child: TextFormField(
                 style: TextStyle(
                     color: Theme.of(context).colorScheme.tertiary,
@@ -106,14 +110,16 @@ class AuthForm extends StatelessWidget {
                 },
                 decoration: kTextFormFieldDecoration(context).copyWith(
                   labelText: "Confirm Password",
-                  suffixIcon: IconButton(
-                    icon: Icon(
-                      isObscureTextConfirm
-                          ? Icons.visibility
-                          : Icons.visibility_off,
-                    ),
-                    onPressed: toggleObscureTextConfirm,
-                  ),
+                  suffixIcon: confirmPasswordController.text.isNotEmpty
+                      ? IconButton(
+                          icon: Icon(
+                            isObscureTextConfirm
+                                ? Icons.visibility
+                                : Icons.visibility_off,
+                          ),
+                          onPressed: toggleObscureTextConfirm,
+                        )
+                      : null,
                 ),
               ),
             ),

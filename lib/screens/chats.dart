@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart'; // Bunu datetime formatlamak için ekliyoruz
+import 'package:intl/intl.dart';
 import 'package:privatechat/screens/chat.dart';
 
 class ChatsScreen extends StatefulWidget {
@@ -20,46 +20,38 @@ class _ChatsScreenState extends State<ChatsScreen> {
     return _db
         .collection('chats')
         .where('participants', arrayContains: currentUser.uid)
+        //.orderBy('lastMessageTimestamp', descending: true)
         .snapshots();
   }
 
-  Future<Map<String, String>> getRecipientUserData(
-      String recipientUserId) async {
-    var userDoc = await _db.collection('users').doc(recipientUserId).get();
-    if (userDoc.exists) {
-      return {
-        'username': userDoc['username'],
-        'image_url': userDoc['image_url'],
-      };
-    } else {
-      return {
-        'username': 'Unknown',
-        'image_url': '',
-      };
-    }
-  }
-
-  Future<Map<String, dynamic>> getLastMessage(String chatRoomId) async {
-    var lastMessageDoc = await _db
+  Stream<QuerySnapshot> getChatMessagesStream(String chatRoomId) {
+    return _db
         .collection('chats')
         .doc(chatRoomId)
         .collection('messages')
         .orderBy('timestamp', descending: true)
         .limit(1)
-        .get();
+        .snapshots();
+  }
 
-    if (lastMessageDoc.docs.isNotEmpty) {
-      var lastMessageData = lastMessageDoc.docs.first.data();
-      return {
-        'text': lastMessageData['text'],
-        'timestamp': lastMessageData['timestamp'],
-      };
-    } else {
-      return {
-        'text': 'No messages yet',
-        'timestamp': null,
-      };
-    }
+  Stream<Map<String, String>> getRecipientUserData(String recipientUserId) {
+    return _db
+        .collection('users')
+        .doc(recipientUserId)
+        .snapshots()
+        .map((userDoc) {
+      if (userDoc.exists) {
+        return {
+          'username': userDoc['username'],
+          'image_url': userDoc['image_url'],
+        };
+      } else {
+        return {
+          'username': 'Unknown',
+          'image_url': '',
+        };
+      }
+    });
   }
 
   @override
@@ -102,11 +94,8 @@ class _ChatsScreenState extends State<ChatsScreen> {
                       orElse: () => currentUser.uid,
                     );
 
-              return FutureBuilder<List<dynamic>>(
-                future: Future.wait([
-                  getRecipientUserData(recipientUserId),
-                  getLastMessage(chatRoomId),
-                ]),
+              return StreamBuilder<Map<String, String>>(
+                stream: getRecipientUserData(recipientUserId),
                 builder: (context, userDataSnapshot) {
                   if (!userDataSnapshot.hasData) {
                     return const ListTile(
@@ -114,85 +103,98 @@ class _ChatsScreenState extends State<ChatsScreen> {
                     );
                   }
 
-                  var userData =
-                      userDataSnapshot.data![0] as Map<String, String>?;
-                  var lastMessageData =
-                      userDataSnapshot.data![1] as Map<String, dynamic>?;
-
-                  if (userData == null || lastMessageData == null) {
-                    return const ListTile(
-                      title: Text('Error loading data'),
-                    );
-                  }
-
-                  var lastMessage = lastMessageData['text'] as String;
-                  var lastMessageTimestamp =
-                      lastMessageData['timestamp'] as Timestamp?;
-
+                  var userData = userDataSnapshot.data!;
                   var username = userData['username']!;
                   var imageUrl = userData['image_url']!;
 
-                  String formatTimestamp(Timestamp? timestamp) {
-                    if (timestamp == null) return '';
+                  return StreamBuilder<QuerySnapshot>(
+                    stream: getChatMessagesStream(chatRoomId),
+                    builder: (context, messageSnapshot) {
+                      if (messageSnapshot.connectionState ==
+                          ConnectionState.waiting) {
+                        return const ListTile(
+                          title: LinearProgressIndicator(),
+                        );
+                      }
+                      if (!messageSnapshot.hasData ||
+                          messageSnapshot.data!.docs.isEmpty) {
+                        return const ListTile(
+                          title: Text('No messages yet'),
+                        );
+                      }
 
-                    DateTime messageTime = timestamp.toDate();
-                    DateTime now = DateTime.now();
-                    DateTime todayStart =
-                        DateTime(now.year, now.month, now.day);
-                    DateTime yesterdayStart =
-                        todayStart.subtract(const Duration(days: 1));
+                      var lastMessageDoc = messageSnapshot.data!.docs.first;
+                      var lastMessageData =
+                          lastMessageDoc.data() as Map<String, dynamic>;
+                      var lastMessage = lastMessageData['text'] as String;
+                      var lastMessageTimestamp =
+                          lastMessageData['timestamp'] as Timestamp?;
 
-                    if (messageTime.isAfter(todayStart)) {
-                      return DateFormat('HH:mm')
-                          .format(messageTime); // Bugünün saati
-                    } else if (messageTime.isAfter(yesterdayStart)) {
-                      return 'Yesterday';
-                    } else {
-                      return DateFormat('dd/MM/yyyy')
-                          .format(messageTime); // Daha önceki günler için
-                    }
-                  }
+                      String formatTimestamp(Timestamp? timestamp) {
+                        if (timestamp == null) return '';
 
-                  return Padding(
-                    padding: const EdgeInsets.only(bottom: 5),
-                    child: ListTile(
-                      trailing: Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          Text(formatTimestamp(lastMessageTimestamp)),
-                        ],
-                      ),
-                      leading: CircleAvatar(
-                        radius: 24,
-                        child: ClipOval(
-                          child: Image.network(
-                            imageUrl,
-                            width: 48,
-                            height: 48,
-                            fit: BoxFit.cover,
-                            filterQuality: FilterQuality.medium,
+                        DateTime messageTime = timestamp.toDate();
+                        DateTime now = DateTime.now();
+                        DateTime todayStart =
+                            DateTime(now.year, now.month, now.day);
+                        DateTime yesterdayStart =
+                            todayStart.subtract(const Duration(days: 1));
+
+                        if (messageTime.isAfter(todayStart)) {
+                          return DateFormat('HH:mm')
+                              .format(messageTime); // Bugünün saati
+                        } else if (messageTime.isAfter(yesterdayStart)) {
+                          return 'Yesterday';
+                        } else {
+                          return DateFormat('dd/MM/yyyy')
+                              .format(messageTime); // Daha önceki günler için
+                        }
+                      }
+
+                      return Padding(
+                        padding: const EdgeInsets.only(bottom: 5),
+                        child: ListTile(
+                          trailing: Column(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              Text(formatTimestamp(lastMessageTimestamp)),
+                            ],
                           ),
-                        ),
-                      ),
-                      title: Text(
-                        recipientUserId != currentUser.uid ? username : 'You',
-                      ),
-                      subtitle: Text(
-                        lastMessage,
-                        overflow: TextOverflow.ellipsis,
-                        maxLines: 1,
-                      ),
-                      onTap: () {
-                        Navigator.of(context).push(
-                          MaterialPageRoute(
-                            builder: (context) => ChatScreen(
-                              recipientUserId: recipientUserId,
-                              recipientUsername: username,
+                          leading: CircleAvatar(
+                            radius: 24,
+                            child: ClipOval(
+                              child: Image.network(
+                                imageUrl,
+                                width: 48,
+                                height: 48,
+                                fit: BoxFit.cover,
+                                filterQuality: FilterQuality.medium,
+                              ),
                             ),
                           ),
-                        );
-                      },
-                    ),
+                          title: Text(
+                            recipientUserId != currentUser.uid
+                                ? username
+                                : 'You',
+                          ),
+                          subtitle: Text(
+                            lastMessage,
+                            overflow: TextOverflow.ellipsis,
+                            maxLines: 1,
+                          ),
+                          onTap: () {
+                            Navigator.of(context).push(
+                              MaterialPageRoute(
+                                builder: (context) => ChatScreen(
+                                  recipientUserId: recipientUserId,
+                                  recipientUsername: username,
+                                ),
+                              ),
+                            );
+                          },
+                        ),
+                      );
+                    },
                   );
                 },
               );

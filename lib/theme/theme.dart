@@ -45,7 +45,7 @@ ThemeData highContrastTheme = ThemeData(
   dialogBackgroundColor: Colors.black,
   dividerColor: Colors.black,
   highlightColor: Colors.black,
-  colorScheme: const ColorScheme.light(
+  colorScheme: const ColorScheme.dark(
     surface: Colors.black,
     primary: Colors.amber,
     secondary: Colors.blue,
