@@ -135,7 +135,7 @@ class _ChatScreenState extends State<ChatScreen> {
               (widget.recipientUserId == _auth.currentUser!.uid
                   ? 'You'
                   : widget.recipientUsername),
-              style: kTitleText,
+              style: kAppbarTitle,
             )
           ],
         ),

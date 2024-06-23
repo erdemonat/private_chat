@@ -28,14 +28,20 @@ class UserInfoList extends StatelessWidget {
           EditableListTile(
             model: ListModel(title: 'Username', subTitle: username),
             onChanged: onUpdateUsername,
+            hintText: 'Enter username (max 12 chars)',
+            maxLength: 12,
           ),
           EditableListTile(
             model: ListModel(title: 'Status', subTitle: status),
             onChanged: onUpdateStatus,
+            hintText: 'Enter status (max 20 chars)',
+            maxLength: 20,
           ),
           EditableListTile(
             model: ListModel(title: 'Email', subTitle: email),
             onChanged: onUpdateEmail,
+            hintText: '232',
+            maxLength: 20,
           ),
         ],
       ),

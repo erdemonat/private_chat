@@ -84,18 +84,18 @@ class _IntroScreenState extends State<IntroScreen>
                   children: [
                     ScaleTransition(
                       scale: _scaleAnimation,
-                      child: Icon(
-                        Icons.security,
-                        size: 90,
-                        color: Theme.of(context).colorScheme.secondary,
+                      child: Image.asset(
+                        'assets/images/logo-vector.png',
+                        color: Theme.of(context).colorScheme.inversePrimary,
+                        width: 220,
                       ),
                     ),
                     const SizedBox(height: 50),
                     Text(
-                      'Private Chat',
-                      style: GoogleFonts.vt323(
+                      'TapC',
+                      style: GoogleFonts.cinzel(
                         color: Theme.of(context).colorScheme.secondary,
-                        fontSize: 48,
+                        fontSize: 46,
                         fontWeight: FontWeight.bold,
                       ),
                     ),

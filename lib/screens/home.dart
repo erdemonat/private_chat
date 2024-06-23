@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:privatechat/theme/constants.dart';
-import 'package:privatechat/screens/chats.dart';
-import 'package:privatechat/screens/contacts.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:privatechat/components/bottom_nav_bar.dart';
 import 'package:privatechat/components/home_popupmenu.dart';
+import 'package:privatechat/screens/chats.dart';
+import 'package:privatechat/screens/contacts.dart';
 
 enum SampleItem { settings, logout }
 
@@ -44,8 +44,9 @@ class _HomeScreenState extends State<HomeScreen> {
         title: Padding(
           padding: const EdgeInsets.only(left: 32),
           child: Text(
-            'Private Chat',
-            style: kTitleText,
+            'TapC',
+            style:
+                GoogleFonts.cinzel(fontWeight: FontWeight.w600, fontSize: 24),
           ),
         ),
       ),

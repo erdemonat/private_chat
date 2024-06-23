@@ -84,7 +84,9 @@ class _AuthScreenState extends State<AuthScreen> {
               .collection('users')
               .doc(userCredentials.user!.uid)
               .set({
-            'username': _enteredEmail.split('@')[0],
+            'username': _enteredEmail.split('@')[0].length > 12
+                ? _enteredEmail.split('@')[0].substring(0, 12)
+                : _enteredEmail.split('@')[0],
             'image_url': imageURL,
             'status': 'Hello I am using PrivateChat',
           });
@@ -175,12 +177,17 @@ class AuthIcon extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        const Icon(Icons.bubble_chart, size: 154),
+        Image.asset(
+          'assets/images/logo-vector.png',
+          color: Theme.of(context).colorScheme.inversePrimary,
+          width: 220,
+        ),
         Padding(
           padding: const EdgeInsets.only(top: 10, bottom: 48),
           child: Text(
-            'Private Chat',
-            style: kTitleText,
+            'TapC',
+            style: kTitleText.copyWith(
+                color: Theme.of(context).colorScheme.secondary),
           ),
         ),
       ],

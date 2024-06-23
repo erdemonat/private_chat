@@ -90,7 +90,7 @@ class MessageBubble extends StatelessWidget {
                         Text(
                           message['text'],
                           style: TextStyle(
-                              color: Theme.of(context).colorScheme.tertiary),
+                              color: Theme.of(context).colorScheme.onSurface),
                         ),
                         const SizedBox(height: 8),
                         Text(
@@ -98,7 +98,7 @@ class MessageBubble extends StatelessWidget {
                           style: TextStyle(
                               color: Theme.of(context)
                                   .colorScheme
-                                  .tertiary
+                                  .onSurface
                                   .withOpacity(0.7)),
                         ),
                       ],

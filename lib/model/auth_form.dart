@@ -45,6 +45,9 @@ class AuthForm extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 8),
             child: TextFormField(
+              style: TextStyle(
+                  color: Theme.of(context).colorScheme.tertiary,
+                  decoration: TextDecoration.none),
               keyboardType: TextInputType.emailAddress,
               validator: (value) {
                 if (value == null ||
@@ -55,13 +58,16 @@ class AuthForm extends StatelessWidget {
                 return null;
               },
               onSaved: onEmailSaved,
-              decoration:
-                  kTextFormFieldDecoration(context).copyWith(labelText: "Email"),
+              decoration: kTextFormFieldDecoration(context)
+                  .copyWith(labelText: "Email"),
             ),
           ),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 8),
             child: TextFormField(
+              style: TextStyle(
+                  color: Theme.of(context).colorScheme.tertiary,
+                  decoration: TextDecoration.none),
               controller: passwordController,
               obscureText: isObscureText,
               onSaved: onPasswordSaved,
@@ -86,6 +92,9 @@ class AuthForm extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 8),
               child: TextFormField(
+                style: TextStyle(
+                    color: Theme.of(context).colorScheme.tertiary,
+                    decoration: TextDecoration.none),
                 controller: confirmPasswordController,
                 obscureText: isObscureTextConfirm,
                 onSaved: onConfirmPasswordSaved,
@@ -99,7 +108,9 @@ class AuthForm extends StatelessWidget {
                   labelText: "Confirm Password",
                   suffixIcon: IconButton(
                     icon: Icon(
-                      isObscureTextConfirm ? Icons.visibility : Icons.visibility_off,
+                      isObscureTextConfirm
+                          ? Icons.visibility
+                          : Icons.visibility_off,
                     ),
                     onPressed: toggleObscureTextConfirm,
                   ),
@@ -112,10 +123,22 @@ class AuthForm extends StatelessWidget {
               padding: const EdgeInsets.symmetric(vertical: 20),
               child: ElevatedButton(
                 onPressed: onSubmit,
-                style: kButtonStyleAuth,
+                style: ButtonStyle(
+                  backgroundColor: WidgetStateProperty.all(
+                      Theme.of(context).colorScheme.primary),
+                  elevation: WidgetStateProperty.all(0),
+                  padding: WidgetStateProperty.all(
+                      const EdgeInsets.symmetric(horizontal: 60, vertical: 20)),
+                  shape: WidgetStateProperty.all(
+                    RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                  ),
+                ),
                 child: Text(
                   isLogin ? 'Login' : 'Signup',
-                  style: TextStyle(color: Theme.of(context).colorScheme.tertiary),
+                  style:
+                      TextStyle(color: Theme.of(context).colorScheme.tertiary),
                 ),
               ),
             ),

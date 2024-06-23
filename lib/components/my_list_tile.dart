@@ -1,14 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:privatechat/model/my_list_tile_model.dart';
 
 class EditableListTile extends StatefulWidget {
   final ListModel model;
   final Function(ListModel listModel)? onChanged;
+  final String hintText;
+  final int maxLength;
 
   const EditableListTile({
     super.key,
     required this.model,
     this.onChanged,
+    required this.hintText,
+    required this.maxLength,
   });
 
   @override
@@ -47,9 +52,14 @@ class _EditableListTileState extends State<EditableListTile> {
 
   Widget get _subTitleTextField {
     return TextField(
+      inputFormatters: [LengthLimitingTextInputFormatter(widget.maxLength)],
       controller: _subTitleEditingController,
-      decoration: const InputDecoration(
-        hintText: 'Subtitle',
+      style: TextStyle(
+          color: Theme.of(context).colorScheme.tertiary.withOpacity(0.75)),
+      decoration: InputDecoration(
+        hintStyle: TextStyle(
+            color: Theme.of(context).colorScheme.tertiary.withOpacity(0.4)),
+        hintText: widget.hintText,
       ),
     );
   }
