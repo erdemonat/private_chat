@@ -15,6 +15,7 @@ class ContactScreenSearchBar extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 4),
       child: TextField(
+        style: TextStyle(color: Theme.of(context).colorScheme.tertiary),
         controller: searchController,
         decoration: InputDecoration(
           hintText: 'Search contacts',

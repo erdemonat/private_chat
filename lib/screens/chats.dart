@@ -20,7 +20,7 @@ class _ChatsScreenState extends State<ChatsScreen> {
     return _db
         .collection('chats')
         .where('participants', arrayContains: currentUser.uid)
-        //.orderBy('lastMessageTimestamp', descending: true)
+        .orderBy('lastMessageTimestamp', descending: true)
         .snapshots();
   }
 

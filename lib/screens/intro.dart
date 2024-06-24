@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:privatechat/model/custom_page_router.dart';
 import 'package:privatechat/screens/auth.dart';
 import 'package:privatechat/screens/home.dart';
 
@@ -42,9 +43,9 @@ class _IntroScreenState extends State<IntroScreen>
   _navigateToHome() async {
     await Future.delayed(const Duration(milliseconds: 1400), () {});
     Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(
-          builder: (context) => StreamBuilder(
+      context,
+      CustomPageRoute(
+          page: StreamBuilder(
             stream: FirebaseAuth.instance.authStateChanges(),
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
@@ -60,7 +61,9 @@ class _IntroScreenState extends State<IntroScreen>
               return const AuthScreen();
             },
           ),
-        ));
+          transitionType: TransitionType.scale,
+          duration: const Duration(milliseconds: 2000)),
+    );
   }
 
   @override

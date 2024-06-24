@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:privatechat/model/custom_page_router.dart';
 import 'package:privatechat/screens/home.dart';
 import 'package:privatechat/screens/profile.dart';
 import 'package:privatechat/screens/settings.dart';
@@ -21,10 +22,7 @@ class HomePopupButtonMenu extends StatelessWidget {
             child: const Text('Profile'),
             onTap: () {
               Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => const ProfileScreen(),
-                  ));
+                  context, CustomPageRoute(page: const ProfileScreen()));
             },
           ),
           PopupMenuItem<SampleItem>(
@@ -32,10 +30,7 @@ class HomePopupButtonMenu extends StatelessWidget {
             child: const Text('Settings'),
             onTap: () {
               Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => const SettingsScreen(),
-                  ));
+                  context, CustomPageRoute(page: const SettingsScreen()));
             },
           ),
           PopupMenuItem<SampleItem>(

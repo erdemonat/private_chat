@@ -15,7 +15,7 @@ class ThemeSettingTile extends StatelessWidget {
           borderRadius: BorderRadius.circular(8),
           color: Theme.of(context).colorScheme.primary),
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 15),
+        padding: const EdgeInsets.only(left: 15, right: 7),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [

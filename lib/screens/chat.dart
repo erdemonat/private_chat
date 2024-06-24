@@ -62,7 +62,10 @@ class _ChatScreenState extends State<ChatScreen> {
       'participants': [userId1, userId2],
     };
 
-    await _firestore.collection('chats').doc(chatRoomId).set(chatRoomData);
+    await _firestore
+        .collection('chats')
+        .doc(chatRoomId)
+        .set(chatRoomData, SetOptions(merge: true));
   }
 
   String getChatRoomId(String userId1, String userId2) {
@@ -89,10 +92,9 @@ class _ChatScreenState extends State<ChatScreen> {
           .collection('messages')
           .add(messageData);
 
-      await _firestore
-          .collection('chats')
-          .doc(chatRoomId)
-          .update({'lastMessageTimestamp': FieldValue.serverTimestamp()});
+      await _firestore.collection('chats').doc(chatRoomId).set(
+          {'lastMessageTimestamp': FieldValue.serverTimestamp()},
+          SetOptions(merge: true));
     }
   }
 
