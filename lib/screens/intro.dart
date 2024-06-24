@@ -61,8 +61,8 @@ class _IntroScreenState extends State<IntroScreen>
               return const AuthScreen();
             },
           ),
-          transitionType: TransitionType.scale,
-          duration: const Duration(milliseconds: 2000)),
+          transitionType: TransitionType.slideFromTop,
+          duration: const Duration(milliseconds: 200)),
     );
   }
 

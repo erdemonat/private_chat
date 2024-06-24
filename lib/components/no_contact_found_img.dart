@@ -7,6 +7,7 @@ class NoContactsFound extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    bool isLightTheme = Theme.of(context).brightness == Brightness.light;
     return Center(
       child: Column(
         //crossAxisAlignment: CrossAxisAlignment.center,
@@ -14,13 +15,12 @@ class NoContactsFound extends StatelessWidget {
         children: [
           Flexible(
             child: SizedBox(
-              height: 150,
+              height: 250,
               child: Image.asset(
-                'assets/images/ghost.png',
-                color: Theme.of(context)
-                    .colorScheme
-                    .primary
-                    .withOpacity(0.3),
+                isLightTheme
+                    ? 'assets/images/error-logo-light.png'
+                    : 'assets/images/error-logo-light.png',
+                color: Theme.of(context).colorScheme.tertiary.withOpacity(0.6),
               ),
             ),
           ),
@@ -29,10 +29,7 @@ class NoContactsFound extends StatelessWidget {
             'No contact here',
             style: TextStyle(
               fontSize: 22,
-              color: Theme.of(context)
-                  .colorScheme
-                  .primary
-                  .withOpacity(0.3),
+              color: Theme.of(context).colorScheme.primary.withOpacity(0.8),
             ),
           )
         ],
