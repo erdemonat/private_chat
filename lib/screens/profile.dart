@@ -41,11 +41,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
           if (snapshot.hasError) {
             return const Center(child: Text('Something went wrong.'));
           }
+          if (!snapshot.hasData || snapshot.data?.data() == null) {
+            return const Center(child: RefreshProgressIndicator());
+          }
 
-          final _userEmail = authenticatedUser.email!;
-          final _username = snapshot.data!.data()!['username'];
-          final _userStatus = snapshot.data!.data()!['status'];
-          final _userImage = snapshot.data!.data()!['image_url'];
+          final _userEmail = authenticatedUser.email ?? '';
+          final _userData = snapshot.data!.data()!;
+          final _username = _userData['username'] ?? 'Unknown';
+          final _userStatus = _userData['status'] ?? 'No status';
+          final _userImage = _userData['image_url'] ?? '';
 
           return SingleChildScrollView(
             child: Center(
@@ -218,6 +222,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
           .child('user_photos')
           .child(authenticatedUser.uid)
           .delete();
+      // QuerySnapshot chatQuerySnapshot = await db
+      //     .collection('chats')
+      //     .where('participants', arrayContains: authenticatedUser.uid)
+      //     .get();
+
+      // for (DocumentSnapshot doc in chatQuerySnapshot.docs) {
+      //   await doc.reference.delete();
+      // } işe yaramadı bakmak lazım
       await db.collection('users').doc(authenticatedUser.uid).delete();
       await authenticatedUser.delete();
 

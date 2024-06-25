@@ -79,16 +79,12 @@ class AuthForm extends StatelessWidget {
               },
               decoration: kTextFormFieldDecoration(context).copyWith(
                 labelText: "Password",
-                suffixIcon: passwordController.text.isNotEmpty
-                    ? IconButton(
-                        icon: Icon(
-                          isObscureText
-                              ? Icons.visibility
-                              : Icons.visibility_off,
-                        ),
-                        onPressed: toggleObscureText,
-                      )
-                    : null,
+                suffixIcon: IconButton(
+                  icon: Icon(
+                    isObscureText ? Icons.visibility : Icons.visibility_off,
+                  ),
+                  onPressed: toggleObscureText,
+                ),
               ),
             ),
           ),
@@ -110,16 +106,14 @@ class AuthForm extends StatelessWidget {
                 },
                 decoration: kTextFormFieldDecoration(context).copyWith(
                   labelText: "Confirm Password",
-                  suffixIcon: confirmPasswordController.text.isNotEmpty
-                      ? IconButton(
-                          icon: Icon(
-                            isObscureTextConfirm
-                                ? Icons.visibility
-                                : Icons.visibility_off,
-                          ),
-                          onPressed: toggleObscureTextConfirm,
-                        )
-                      : null,
+                  suffixIcon: IconButton(
+                    icon: Icon(
+                      isObscureTextConfirm
+                          ? Icons.visibility
+                          : Icons.visibility_off,
+                    ),
+                    onPressed: toggleObscureTextConfirm,
+                  ),
                 ),
               ),
             ),
