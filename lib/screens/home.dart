@@ -16,17 +16,26 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   int _selectedIndex = 0;
+  final PageController _pageController = PageController();
+
+  final List<Widget> _pages = [
+    const ChatsScreen(),
+    const ContactsScreen(),
+  ];
 
   void navigateBottomBar(int index) {
     setState(() {
       _selectedIndex = index;
     });
+    _pageController.animateToPage(index,
+        duration: const Duration(milliseconds: 200), curve: Curves.easeInOut);
   }
 
-  final List<Widget> _pages = [
-    ChatsScreen(),
-    const ContactsScreen(),
-  ];
+  @override
+  void dispose() {
+    _pageController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -50,7 +59,15 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         ),
       ),
-      body: _pages[_selectedIndex],
+      body: PageView(
+        controller: _pageController,
+        onPageChanged: (index) {
+          setState(() {
+            _selectedIndex = index;
+          });
+        },
+        children: _pages,
+      ),
       bottomNavigationBar: MyNavigationBar(
         onTabChange: (index) => navigateBottomBar(index),
       ),

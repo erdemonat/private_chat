@@ -37,7 +37,45 @@ class HomePopupButtonMenu extends StatelessWidget {
             value: SampleItem.logout,
             child: const Text('Logout'),
             onTap: () {
-              FirebaseAuth.instance.signOut();
+              showDialog<String>(
+                context: context,
+                builder: (context) => AlertDialog(
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12)),
+                  title: Text(
+                    'Logging out?',
+                    style: TextStyle(
+                        fontSize: 20,
+                        color: Theme.of(context).colorScheme.tertiary),
+                  ),
+                  content: Text(
+                    'Don\'t worry, we\'ll keep the place warm for your return! 😊🔥',
+                    style: TextStyle(
+                        color: Theme.of(context).colorScheme.tertiary),
+                  ),
+                  actions: [
+                    TextButton(
+                      onPressed: () => Navigator.pop(context, null),
+                      child: Text(
+                        'Cancel',
+                        style: TextStyle(
+                            color: Theme.of(context).colorScheme.tertiary),
+                      ),
+                    ),
+                    TextButton(
+                      onPressed: () {
+                        FirebaseAuth.instance.signOut();
+                        Navigator.pop(context);
+                      },
+                      child: Text(
+                        'Confirm',
+                        style: TextStyle(
+                            color: Theme.of(context).colorScheme.tertiary),
+                      ),
+                    ),
+                  ],
+                ),
+              );
             },
           ),
         ];

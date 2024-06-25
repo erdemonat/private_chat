@@ -19,7 +19,7 @@ class NoContactsFound extends StatelessWidget {
               child: Image.asset(
                 isLightTheme
                     ? 'assets/images/error-logo-light.png'
-                    : 'assets/images/error-logo-light.png',
+                    : 'assets/images/error-logo-dark.png',
                 color: Theme.of(context).colorScheme.tertiary.withOpacity(0.6),
               ),
             ),

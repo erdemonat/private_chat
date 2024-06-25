@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:privatechat/model/custom_page_router.dart';
 import 'package:privatechat/screens/chat.dart';
 
 class ChatsScreen extends StatefulWidget {
@@ -183,14 +184,13 @@ class _ChatsScreenState extends State<ChatsScreen> {
                             maxLines: 1,
                           ),
                           onTap: () {
-                            Navigator.of(context).push(
-                              MaterialPageRoute(
-                                builder: (context) => ChatScreen(
-                                  recipientUserId: recipientUserId,
-                                  recipientUsername: username,
-                                ),
+                            Navigator.of(context).push(CustomPageRoute(
+                              page: ChatScreen(
+                                recipientUserId: recipientUserId,
+                                recipientUsername: username,
                               ),
-                            );
+                              transitionType: TransitionType.slideFromLeft,
+                            ));
                           },
                         ),
                       );
