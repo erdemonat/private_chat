@@ -94,9 +94,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
     return showDialog<String>(
       context: context,
       builder: (context) => AlertDialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
         title: Text(
-          'Re-enter your password',
-          style: TextStyle(color: Theme.of(context).colorScheme.tertiary),
+          'Verify your password',
+          style: TextStyle(
+              color: Theme.of(context).colorScheme.tertiary, fontSize: 20),
         ),
         content: TextField(
           style: TextStyle(color: Theme.of(context).colorScheme.tertiary),
@@ -107,11 +109,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context, null),
-            child: const Text('Cancel'),
+            child: Text('Cancel',
+                style:
+                    TextStyle(color: Theme.of(context).colorScheme.tertiary)),
           ),
           TextButton(
             onPressed: () => Navigator.pop(context, _passwordController.text),
-            child: const Text('Confirm'),
+            child: Text('Confirm',
+                style:
+                    TextStyle(color: Theme.of(context).colorScheme.tertiary)),
           ),
         ],
       ),
@@ -171,10 +177,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
       final File imageFile = File(pickedFile.path);
 
-      final storageRef = FirebaseStorage.instance
-          .ref()
-          .child('user_photos')
-          .child(user.uid + '.jpg');
+      final storageRef =
+          FirebaseStorage.instance.ref().child('user_photos').child(user.uid);
 
       await storageRef.putFile(imageFile);
       final newPhotoUrl = await storageRef.getDownloadURL();
@@ -197,7 +201,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     String? password = await _promptForPassword(context);
     if (password == null || password.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Password is required to update email')),
+        const SnackBar(content: Text('Password is required to delete account')),
       );
       return;
     }
@@ -213,11 +217,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
       await FirebaseStorage.instance
           .ref()
           .child('user_photos')
-          .child('${authenticatedUser.uid}.jpg')
+          .child(authenticatedUser.uid)
           .delete();
       await db.collection('users').doc(authenticatedUser.uid).delete();
 
       await FirebaseAuth.instance.signOut();
+      Navigator.pop(context);
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Failed delete account: $e')),
