@@ -100,14 +100,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
       builder: (context) => AlertDialog(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
         title: Text(
-          'Verify your password',
+          'Confirm permanent deletion of user info, image, and messages?',
           style: TextStyle(
-              color: Theme.of(context).colorScheme.tertiary, fontSize: 20),
+              color: Theme.of(context).colorScheme.tertiary, fontSize: 16),
         ),
         content: TextField(
           style: TextStyle(color: Theme.of(context).colorScheme.tertiary),
           controller: _passwordController,
-          decoration: const InputDecoration(hintText: 'Password'),
+          decoration: const InputDecoration(hintText: 'Verify password'),
           obscureText: true,
         ),
         actions: [
@@ -201,6 +201,29 @@ class _ProfileScreenState extends State<ProfileScreen> {
     }
   }
 
+  Future<void> _deleteUserChats(String userId) async {
+    QuerySnapshot userChatsSnapshot = await db
+        .collection('chats')
+        .where('participants', arrayContains: userId)
+        .get();
+
+    for (QueryDocumentSnapshot doc in userChatsSnapshot.docs) {
+      // Delete subcollections first
+      await _deleteSubcollections(doc.reference);
+      // Then delete the document
+      await doc.reference.delete();
+    }
+  }
+
+  Future<void> _deleteSubcollections(DocumentReference docRef) async {
+    // Get all subcollections of the document
+    var subcollections = await docRef.collection('messages').get();
+
+    for (var subDoc in subcollections.docs) {
+      await subDoc.reference.delete();
+    }
+  }
+
   Future<void> _deleteAccount() async {
     String? password = await _promptForPassword(context);
     if (password == null || password.isEmpty) {
@@ -222,15 +245,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
           .child('user_photos')
           .child(authenticatedUser.uid)
           .delete();
-      // QuerySnapshot chatQuerySnapshot = await db
-      //     .collection('chats')
-      //     .where('participants', arrayContains: authenticatedUser.uid)
-      //     .get();
 
-      // for (DocumentSnapshot doc in chatQuerySnapshot.docs) {
-      //   await doc.reference.delete();
-      // } işe yaramadı bakmak lazım
       await db.collection('users').doc(authenticatedUser.uid).delete();
+      await _deleteUserChats(authenticatedUser.uid);
       await authenticatedUser.delete();
 
       Navigator.pop(context);

@@ -71,8 +71,19 @@ class _ChatsScreenState extends State<ChatsScreen> {
           );
         }
         if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
-          return const Center(
-            child: Text('No active chats found'),
+          return Center(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 32),
+              child: Text(
+                'Find the username in Contacts to chat',
+                softWrap: true,
+                maxLines: 2,
+                style: TextStyle(
+                    color:
+                        Theme.of(context).colorScheme.tertiary.withOpacity(0.4),
+                    fontSize: 16),
+              ),
+            ),
           );
         }
 
