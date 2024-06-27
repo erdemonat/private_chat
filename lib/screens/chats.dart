@@ -167,9 +167,26 @@ class _ChatsScreenState extends State<ChatsScreen> {
                         padding: const EdgeInsets.only(bottom: 5),
                         child: ListTile(
                           trailing: Column(
-                            mainAxisAlignment: MainAxisAlignment.start,
+                            mainAxisAlignment: MainAxisAlignment.spaceAround,
                             children: [
                               Text(formatTimestamp(lastMessageTimestamp)),
+
+                              /// New message counter
+                              CircleAvatar(
+                                backgroundColor: Colors.green.withOpacity(0.2),
+                                radius: 10,
+                                child: Center(
+                                  child: Text(
+                                    '1',
+                                    style: TextStyle(
+                                      fontSize: 10,
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .tertiary,
+                                    ),
+                                  ),
+                                ),
+                              ),
                             ],
                           ),
                           leading: CircleAvatar(
@@ -195,13 +212,15 @@ class _ChatsScreenState extends State<ChatsScreen> {
                             maxLines: 1,
                           ),
                           onTap: () {
-                            Navigator.of(context).push(CustomPageRoute(
-                              page: ChatScreen(
-                                recipientUserId: recipientUserId,
-                                recipientUsername: username,
+                            Navigator.of(context).push(
+                              CustomPageRoute(
+                                page: ChatScreen(
+                                  recipientUserId: recipientUserId,
+                                  recipientUsername: username,
+                                ),
+                                transitionType: TransitionType.slideFromLeft,
                               ),
-                              transitionType: TransitionType.slideFromLeft,
-                            ));
+                            );
                           },
                         ),
                       );

@@ -22,7 +22,7 @@ class ChatScreen extends StatefulWidget {
 }
 
 class _ChatScreenState extends State<ChatScreen> {
-  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  final FirebaseFirestore _db = FirebaseFirestore.instance;
   final FirebaseAuth _auth = FirebaseAuth.instance;
   String? recipientImageUrl;
   String? chatRoomId;
@@ -40,7 +40,7 @@ class _ChatScreenState extends State<ChatScreen> {
 
   void _loadRecipientData() async {
     var recipientUserDoc =
-        await _firestore.collection('users').doc(widget.recipientUserId).get();
+        await _db.collection('users').doc(widget.recipientUserId).get();
 
     if (recipientUserDoc.exists) {
       setState(() {
@@ -62,7 +62,7 @@ class _ChatScreenState extends State<ChatScreen> {
       'participants': [userId1, userId2],
     };
 
-    await _firestore
+    await _db
         .collection('chats')
         .doc(chatRoomId)
         .set(chatRoomData, SetOptions(merge: true));
@@ -86,15 +86,18 @@ class _ChatScreenState extends State<ChatScreen> {
         'timestamp': FieldValue.serverTimestamp(),
       };
 
-      await _firestore
+      await _db
           .collection('chats')
           .doc(chatRoomId)
           .collection('messages')
           .add(messageData);
 
-      await _firestore.collection('chats').doc(chatRoomId).set(
+      await _db.collection('chats').doc(chatRoomId).set(
           {'lastMessageTimestamp': FieldValue.serverTimestamp()},
           SetOptions(merge: true));
+      await _db.collection('chats').doc(chatRoomId).set(
+        {'newMessageCounter': FieldValue.increment(1)},
+      );
     }
   }
 
@@ -169,7 +172,7 @@ class _ChatScreenState extends State<ChatScreen> {
               Expanded(
                 child: StreamBuilder<QuerySnapshot>(
                   stream: chatRoomId != null
-                      ? _firestore
+                      ? _db
                           .collection('chats')
                           .doc(chatRoomId)
                           .collection('messages')

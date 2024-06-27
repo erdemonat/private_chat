@@ -240,14 +240,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
       );
 
       await authenticatedUser.reauthenticateWithCredential(credential);
+
+      await _deleteUserChats(authenticatedUser.uid);
+      await db.collection('users').doc(authenticatedUser.uid).delete();
       await FirebaseStorage.instance
           .ref()
           .child('user_photos')
           .child(authenticatedUser.uid)
           .delete();
-
-      await db.collection('users').doc(authenticatedUser.uid).delete();
-      await _deleteUserChats(authenticatedUser.uid);
       await authenticatedUser.delete();
 
       Navigator.pop(context);
