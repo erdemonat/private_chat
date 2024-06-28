@@ -1,3 +1,4 @@
+import 'package:animate_gradient/animate_gradient.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -18,6 +19,7 @@ class _ChatsScreenState extends State<ChatsScreen> {
 
   Stream<QuerySnapshot> getUserChatsStream() {
     var currentUser = _auth.currentUser!;
+
     return _db
         .collection('chats')
         .where('participants', arrayContains: currentUser.uid)
@@ -163,30 +165,72 @@ class _ChatsScreenState extends State<ChatsScreen> {
                         }
                       }
 
+                      int newMessageCounter = chatDoc['newMessageCounter'] ?? 0;
+
                       return Padding(
                         padding: const EdgeInsets.only(bottom: 5),
                         child: ListTile(
                           trailing: Column(
                             mainAxisAlignment: MainAxisAlignment.spaceAround,
                             children: [
-                              Text(formatTimestamp(lastMessageTimestamp)),
+                              Text(
+                                formatTimestamp(lastMessageTimestamp),
+                                style: TextStyle(
+                                  color: newMessageCounter == 0
+                                      ? Theme.of(context)
+                                          .colorScheme
+                                          .tertiary
+                                          .withOpacity(0.6)
+                                      : Colors.green.withOpacity(0.8),
+                                ),
+                              ),
 
                               /// New message counter
-                              CircleAvatar(
-                                backgroundColor: Colors.green.withOpacity(0.2),
-                                radius: 10,
-                                child: Center(
-                                  child: Text(
-                                    '1',
-                                    style: TextStyle(
-                                      fontSize: 10,
-                                      color: Theme.of(context)
-                                          .colorScheme
-                                          .tertiary,
+                              if (newMessageCounter != 0)
+                                ClipOval(
+                                  child: AnimateGradient(
+                                    primaryBeginGeometry:
+                                        const AlignmentDirectional(0, 1),
+                                    primaryEndGeometry:
+                                        const AlignmentDirectional(0, 2),
+                                    secondaryBeginGeometry:
+                                        const AlignmentDirectional(2, 0),
+                                    secondaryEndGeometry:
+                                        const AlignmentDirectional(0, -0.8),
+                                    //textDirectionForGeometry: TextDirection.rtl,
+                                    primaryColors: const [
+                                      Colors.pink,
+                                      Colors.pinkAccent,
+                                      Colors.white,
+                                    ],
+                                    secondaryColors: const [
+                                      Colors.white,
+                                      Colors.blueAccent,
+                                      Colors.blue,
+                                    ],
+                                    child: CircleAvatar(
+                                      backgroundColor:
+                                          Colors.green.withOpacity(0.2),
+                                      radius: 10,
+                                      child: Center(
+                                        child: Text(
+                                          newMessageCounter.toString(),
+                                          style: TextStyle(
+                                            fontSize: 10,
+                                            color: Theme.of(context)
+                                                .colorScheme
+                                                .tertiary,
+                                          ),
+                                        ),
+                                      ),
                                     ),
                                   ),
                                 ),
-                              ),
+                              if (newMessageCounter == 0)
+                                const CircleAvatar(
+                                  radius: 10,
+                                  backgroundColor: Colors.transparent,
+                                ),
                             ],
                           ),
                           leading: CircleAvatar(
@@ -206,12 +250,46 @@ class _ChatsScreenState extends State<ChatsScreen> {
                                 ? username
                                 : 'You',
                           ),
-                          subtitle: Text(
-                            lastMessage,
-                            overflow: TextOverflow.ellipsis,
-                            maxLines: 1,
-                          ),
+                          subtitle:
+                              userData[username] != lastMessageData['username']
+                                  ? Text(
+                                      lastMessage,
+                                      overflow: TextOverflow.ellipsis,
+                                      maxLines: 1,
+                                      style: TextStyle(
+                                        color: Theme.of(context)
+                                            .colorScheme
+                                            .tertiary
+                                            .withOpacity(0.6),
+                                      ),
+                                    )
+                                  : Row(
+                                      children: [
+                                        Icon(
+                                          Icons.check,
+                                          color: newMessageCounter == 0
+                                              ? Colors.blue
+                                              : Theme.of(context)
+                                                  .colorScheme
+                                                  .tertiary,
+                                        ),
+                                        const SizedBox(width: 4),
+                                        Text(lastMessage,
+                                            overflow: TextOverflow.ellipsis,
+                                            maxLines: 1,
+                                            style: TextStyle(
+                                              color: Theme.of(context)
+                                                  .colorScheme
+                                                  .tertiary
+                                                  .withOpacity(0.6),
+                                            )),
+                                      ],
+                                    ),
                           onTap: () {
+                            _db
+                                .collection('chats')
+                                .doc(chatRoomId)
+                                .update({'newMessageCounter': 0});
                             Navigator.of(context).push(
                               CustomPageRoute(
                                 page: ChatScreen(

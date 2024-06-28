@@ -93,10 +93,11 @@ class _ChatScreenState extends State<ChatScreen> {
           .add(messageData);
 
       await _db.collection('chats').doc(chatRoomId).set(
-          {'lastMessageTimestamp': FieldValue.serverTimestamp()},
-          SetOptions(merge: true));
-      await _db.collection('chats').doc(chatRoomId).set(
-        {'newMessageCounter': FieldValue.increment(1)},
+        {
+          'lastMessageTimestamp': FieldValue.serverTimestamp(),
+          'newMessageCounter': FieldValue.increment(1),
+        },
+        SetOptions(merge: true),
       );
     }
   }
@@ -105,6 +106,15 @@ class _ChatScreenState extends State<ChatScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        leading: IconButton(
+            onPressed: () {
+              Navigator.pop(context);
+              _db
+                  .collection('chats')
+                  .doc(chatRoomId)
+                  .update({'newMessageCounter': 0});
+            },
+            icon: const Icon(Icons.arrow_back)),
         actions: [
           Padding(
             padding: const EdgeInsets.only(right: 20),
