@@ -98,6 +98,7 @@ class _ChatScreenState extends State<ChatScreen> {
           'lastMessageTimestamp': FieldValue.serverTimestamp(),
           'newMessageCounter-${_auth.currentUser!.uid}':
               FieldValue.increment(1),
+          'isOnChat-${_auth.currentUser!.uid}': true
         },
         SetOptions(merge: true),
       );
@@ -111,10 +112,12 @@ class _ChatScreenState extends State<ChatScreen> {
         leading: IconButton(
             onPressed: () {
               Navigator.pop(context);
-              _db
-                  .collection('chats')
-                  .doc(chatRoomId)
-                  .update({'newMessageCounter-${widget.recipientUserId}': 0});
+              _db.collection('chats').doc(chatRoomId).update(
+                {
+                  'newMessageCounter-${widget.recipientUserId}': 0,
+                  'isOnChat-${_auth.currentUser!.uid}': false
+                },
+              );
             },
             icon: const Icon(Icons.arrow_back)),
         actions: [

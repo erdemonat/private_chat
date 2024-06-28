@@ -274,9 +274,11 @@ class _ChatsScreenState extends State<ChatsScreen> {
                             ),
                           ),
                           onTap: () {
-                            markMessageAsRead(chatRoomId, lastMessage);
-                            _db.collection('chats').doc(chatRoomId).update(
-                                {'newMessageCounter-$recipientUserId': 0});
+                            markMessageAsRead(chatRoomId, lastMessageDoc.id);
+                            _db.collection('chats').doc(chatRoomId).update({
+                              'newMessageCounter-$recipientUserId': 0,
+                              'isOnChat-${_auth.currentUser!.uid}': true
+                            });
                             Navigator.of(context).push(
                               CustomPageRoute(
                                 page: ChatScreen(
