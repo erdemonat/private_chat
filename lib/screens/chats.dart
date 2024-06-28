@@ -165,7 +165,8 @@ class _ChatsScreenState extends State<ChatsScreen> {
                         }
                       }
 
-                      int newMessageCounter = chatDoc['newMessageCounter'] ?? 0;
+                      int newMessageCounter =
+                          chatDoc['newMessageCounter-$recipientUserId'] ?? 0;
 
                       return Padding(
                         padding: const EdgeInsets.only(bottom: 5),
@@ -250,46 +251,20 @@ class _ChatsScreenState extends State<ChatsScreen> {
                                 ? username
                                 : 'You',
                           ),
-                          subtitle:
-                              userData[username] != lastMessageData['username']
-                                  ? Text(
-                                      lastMessage,
-                                      overflow: TextOverflow.ellipsis,
-                                      maxLines: 1,
-                                      style: TextStyle(
-                                        color: Theme.of(context)
-                                            .colorScheme
-                                            .tertiary
-                                            .withOpacity(0.6),
-                                      ),
-                                    )
-                                  : Row(
-                                      children: [
-                                        Icon(
-                                          Icons.check,
-                                          color: newMessageCounter == 0
-                                              ? Colors.blue
-                                              : Theme.of(context)
-                                                  .colorScheme
-                                                  .tertiary,
-                                        ),
-                                        const SizedBox(width: 4),
-                                        Text(lastMessage,
-                                            overflow: TextOverflow.ellipsis,
-                                            maxLines: 1,
-                                            style: TextStyle(
-                                              color: Theme.of(context)
-                                                  .colorScheme
-                                                  .tertiary
-                                                  .withOpacity(0.6),
-                                            )),
-                                      ],
-                                    ),
+                          subtitle: Text(
+                            lastMessage,
+                            overflow: TextOverflow.ellipsis,
+                            maxLines: 1,
+                            style: TextStyle(
+                              color: Theme.of(context)
+                                  .colorScheme
+                                  .tertiary
+                                  .withOpacity(0.6),
+                            ),
+                          ),
                           onTap: () {
-                            _db
-                                .collection('chats')
-                                .doc(chatRoomId)
-                                .update({'newMessageCounter': 0});
+                            _db.collection('chats').doc(chatRoomId).update(
+                                {'newMessageCounter-$recipientUserId': 0});
                             Navigator.of(context).push(
                               CustomPageRoute(
                                 page: ChatScreen(

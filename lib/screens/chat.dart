@@ -95,7 +95,8 @@ class _ChatScreenState extends State<ChatScreen> {
       await _db.collection('chats').doc(chatRoomId).set(
         {
           'lastMessageTimestamp': FieldValue.serverTimestamp(),
-          'newMessageCounter': FieldValue.increment(1),
+          'newMessageCounter-${_auth.currentUser!.uid}':
+              FieldValue.increment(1),
         },
         SetOptions(merge: true),
       );
@@ -112,7 +113,7 @@ class _ChatScreenState extends State<ChatScreen> {
               _db
                   .collection('chats')
                   .doc(chatRoomId)
-                  .update({'newMessageCounter': 0});
+                  .update({'newMessageCounter-${widget.recipientUserId}': 0});
             },
             icon: const Icon(Icons.arrow_back)),
         actions: [
