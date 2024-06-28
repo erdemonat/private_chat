@@ -156,12 +156,28 @@ class _ChatScreenState extends State<ChatScreen> {
             const SizedBox(
               width: 12,
             ),
-            Text(
-              (widget.recipientUserId == _auth.currentUser!.uid
-                  ? 'You'
-                  : widget.recipientUsername),
-              style: kAppbarTitle,
-            )
+            true
+                ? Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        (widget.recipientUserId == _auth.currentUser!.uid
+                            ? 'You'
+                            : widget.recipientUsername),
+                        style: kAppbarTitle,
+                      ),
+                      Text(
+                        'online',
+                        style: TextStyle(fontSize: 14),
+                      )
+                    ],
+                  )
+                : Text(
+                    (widget.recipientUserId == _auth.currentUser!.uid
+                        ? 'You'
+                        : widget.recipientUsername),
+                    style: kAppbarTitle,
+                  )
           ],
         ),
       ),
