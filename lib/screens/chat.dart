@@ -84,6 +84,7 @@ class _ChatScreenState extends State<ChatScreen> {
         'text': messageText,
         'senderId': _auth.currentUser!.uid,
         'timestamp': FieldValue.serverTimestamp(),
+        'isRead': false,
       };
 
       await _db
@@ -214,9 +215,12 @@ class _ChatScreenState extends State<ChatScreen> {
                         bool sentByMe = isMe(senderId);
 
                         return MessageBubble(
-                            sentByMe: sentByMe,
-                            message: message,
-                            timeString: timeString);
+                          sentByMe: sentByMe,
+                          message: message,
+                          timeString: timeString,
+                          checkColor:
+                              message['isRead'] ? Colors.blue : Colors.grey,
+                        );
                       },
                     );
                   },

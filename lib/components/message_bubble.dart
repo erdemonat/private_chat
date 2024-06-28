@@ -9,11 +9,13 @@ class MessageBubble extends StatelessWidget {
     required this.sentByMe,
     required this.message,
     required this.timeString,
+    required this.checkColor,
   });
 
   final bool sentByMe;
   final QueryDocumentSnapshot<Object?> message;
   final String timeString;
+  final Color checkColor;
 
   @override
   Widget build(BuildContext context) {
@@ -93,14 +95,33 @@ class MessageBubble extends StatelessWidget {
                               color: Theme.of(context).colorScheme.onSurface),
                         ),
                         const SizedBox(height: 8),
-                        Text(
-                          timeString,
-                          style: TextStyle(
-                              color: Theme.of(context)
-                                  .colorScheme
-                                  .onSurface
-                                  .withOpacity(0.7)),
-                        ),
+                        !sentByMe
+                            ? Text(
+                                timeString,
+                                style: TextStyle(
+                                    color: Theme.of(context)
+                                        .colorScheme
+                                        .onSurface
+                                        .withOpacity(0.7)),
+                              )
+                            : Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Text(
+                                    timeString,
+                                    style: TextStyle(
+                                        color: Theme.of(context)
+                                            .colorScheme
+                                            .onSurface
+                                            .withOpacity(0.7)),
+                                  ),
+                                  Icon(
+                                    Icons.check,
+                                    color: checkColor,
+                                    size: 18,
+                                  )
+                                ],
+                              ),
                       ],
                     )),
               ],

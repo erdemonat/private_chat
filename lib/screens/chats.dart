@@ -57,6 +57,17 @@ class _ChatsScreenState extends State<ChatsScreen> {
     });
   }
 
+  void markMessageAsRead(String chatId, String messageId) async {
+    await FirebaseFirestore.instance
+        .collection('chats')
+        .doc(chatId)
+        .collection('messages')
+        .doc(messageId)
+        .update({
+      'isRead': true,
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<QuerySnapshot>(
@@ -263,6 +274,7 @@ class _ChatsScreenState extends State<ChatsScreen> {
                             ),
                           ),
                           onTap: () {
+                            markMessageAsRead(chatRoomId, lastMessage);
                             _db.collection('chats').doc(chatRoomId).update(
                                 {'newMessageCounter-$recipientUserId': 0});
                             Navigator.of(context).push(
