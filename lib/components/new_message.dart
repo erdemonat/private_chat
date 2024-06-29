@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:isar/isar.dart';
 
 class NewMessage extends StatefulWidget {
   final Function(String) onSendMessage;
