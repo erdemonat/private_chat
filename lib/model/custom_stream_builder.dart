@@ -4,7 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 class CustomStreamBuilder extends StatelessWidget {
   final Stream<QuerySnapshot> stream;
 
-  const CustomStreamBuilder({Key? key, required this.stream}) : super(key: key);
+  const CustomStreamBuilder({super.key, required this.stream});
 
   @override
   Widget build(BuildContext context) {
@@ -12,11 +12,11 @@ class CustomStreamBuilder extends StatelessWidget {
       stream: stream,
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return Center(child: CircularProgressIndicator());
+          return const Center(child: RefreshProgressIndicator());
         } else if (snapshot.hasError) {
           return Center(child: Text('Error: ${snapshot.error}'));
         } else if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
-          return Center(child: Text('No data'));
+          return const Center(child: Text('No data'));
         }
 
         final docs = snapshot.data!.docs;
