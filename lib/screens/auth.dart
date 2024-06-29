@@ -27,7 +27,7 @@ class _AuthScreenState extends State<AuthScreen> {
 
   var _enteredEmail = '';
   var _enteredPassword = '';
-  var _enteredConfirmPassword = '';
+  var enteredConfirmPassword = '';
 
   var _isObscureText = true;
   var _isObscureTextConfirm = true;
@@ -146,7 +146,7 @@ class _AuthScreenState extends State<AuthScreen> {
                   _enteredPassword = value!;
                 },
                 onConfirmPasswordSaved: (value) {
-                  _enteredConfirmPassword = value!;
+                  enteredConfirmPassword = value!;
                 },
                 isObscureText: _isObscureText,
                 toggleObscureText: () {

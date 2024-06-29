@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:isar/isar.dart';
 
 class NewMessage extends StatefulWidget {
   final Function(String) onSendMessage;
@@ -66,7 +65,7 @@ class _NewMessageState extends State<NewMessage> {
                         borderRadius: BorderRadius.circular(15)),
                     suffixIcon: _isComposing
                         ? IconButton(
-                            icon: Icon(Icons.send_rounded),
+                            icon: const Icon(Icons.send_rounded),
                             onPressed: _sendMessage,
                           )
                         : null,

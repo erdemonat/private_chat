@@ -15,8 +15,8 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  int _selectedIndex = 0;
   final PageController _pageController = PageController();
+  int selectedIndex = 0;
 
   final List<Widget> _pages = [
     const ChatsScreen(),
@@ -25,7 +25,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   void navigateBottomBar(int index) {
     setState(() {
-      _selectedIndex = index;
+      selectedIndex = index;
     });
     _pageController.animateToPage(index,
         duration: const Duration(milliseconds: 200), curve: Curves.easeInOut);
@@ -64,7 +64,7 @@ class _HomeScreenState extends State<HomeScreen> {
         controller: _pageController,
         onPageChanged: (index) {
           setState(() {
-            _selectedIndex = index;
+            selectedIndex = index;
           });
         },
         children: _pages,

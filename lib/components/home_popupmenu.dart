@@ -4,7 +4,6 @@ import 'package:privatechat/model/custom_page_router.dart';
 import 'package:privatechat/screens/home.dart';
 import 'package:privatechat/screens/profile.dart';
 import 'package:privatechat/screens/settings.dart';
-import 'package:privatechat/screens/test_screen.dart';
 
 class HomePopupButtonMenu extends StatelessWidget {
   const HomePopupButtonMenu({
@@ -32,14 +31,6 @@ class HomePopupButtonMenu extends StatelessWidget {
             onTap: () {
               Navigator.push(
                   context, CustomPageRoute(page: const SettingsScreen()));
-            },
-          ),
-          PopupMenuItem<SampleItem>(
-            value: SampleItem.settings,
-            child: const Text('Test'),
-            onTap: () {
-              Navigator.push(
-                  context, CustomPageRoute(page: const TestScreen()));
             },
           ),
           PopupMenuItem<SampleItem>(
