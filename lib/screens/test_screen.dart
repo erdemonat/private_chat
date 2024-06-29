@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:privatechat/model/custom_stream_builder.dart';
+import 'package:privatechat/custom_streams/custom_stream_builder.dart';
 import 'package:privatechat/providers/stream_provider.dart';
 import 'package:provider/provider.dart';
 

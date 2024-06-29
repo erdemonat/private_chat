@@ -8,7 +8,7 @@ var _auth = FirebaseAuth.instance;
 class FirestoreStreamProviders with ChangeNotifier {
   //
   // Chatroom üstündeki fieldlara erişmek için
-  Stream<DocumentSnapshot> getChatRoomFields(String chatRoomId) {
+  Stream<DocumentSnapshot> getChatRoomFields(chatRoomId) {
     return _db.collection('chats').doc(chatRoomId).snapshots();
   }
 
@@ -56,7 +56,7 @@ class FirestoreStreamProviders with ChangeNotifier {
   }
 
   // Chat ekranında mesajları almamızı sağlıyor
-  Stream<QuerySnapshot> getChatMessages(String chatRoomId) {
+  Stream<QuerySnapshot> getChatMessages(chatRoomId) {
     return _db
         .collection('chats')
         .doc(chatRoomId)

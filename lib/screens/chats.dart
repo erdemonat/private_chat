@@ -4,7 +4,9 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:privatechat/model/custom_page_router.dart';
+import 'package:privatechat/providers/stream_provider.dart';
 import 'package:privatechat/screens/chat.dart';
+import 'package:provider/provider.dart';
 
 class ChatsScreen extends StatefulWidget {
   const ChatsScreen({super.key});
@@ -17,7 +19,7 @@ class _ChatsScreenState extends State<ChatsScreen> {
   final FirebaseFirestore _db = FirebaseFirestore.instance;
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
-  Stream<QuerySnapshot> getUserChatsStream() {
+  /*Stream<QuerySnapshot> getUserChatsStream() {
     var currentUser = _auth.currentUser!;
 
     return _db
@@ -25,7 +27,7 @@ class _ChatsScreenState extends State<ChatsScreen> {
         .where('participants', arrayContains: currentUser.uid)
         .orderBy('lastMessageTimestamp', descending: true)
         .snapshots();
-  }
+  }*/
 
   Stream<QuerySnapshot> getChatMessagesStream(String chatRoomId) {
     return _db
@@ -70,8 +72,10 @@ class _ChatsScreenState extends State<ChatsScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final firestoreProvider = Provider.of<FirestoreStreamProviders>(context);
+
     return StreamBuilder<QuerySnapshot>(
-      stream: getUserChatsStream(),
+      stream: firestoreProvider.getUserChatsStream(),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const Center(
@@ -133,7 +137,7 @@ class _ChatsScreenState extends State<ChatsScreen> {
                   var imageUrl = userData['image_url']!;
 
                   return StreamBuilder<QuerySnapshot>(
-                    stream: getChatMessagesStream(chatRoomId),
+                    stream: firestoreProvider.getLastChatMessages(chatRoomId),
                     builder: (context, messageSnapshot) {
                       if (messageSnapshot.connectionState ==
                           ConnectionState.waiting) {
@@ -199,41 +203,18 @@ class _ChatsScreenState extends State<ChatsScreen> {
 
                               /// New message counter
                               if (newMessageCounter != 0)
-                                ClipOval(
-                                  child: AnimateGradient(
-                                    primaryBeginGeometry:
-                                        const AlignmentDirectional(0, 1),
-                                    primaryEndGeometry:
-                                        const AlignmentDirectional(0, 2),
-                                    secondaryBeginGeometry:
-                                        const AlignmentDirectional(2, 0),
-                                    secondaryEndGeometry:
-                                        const AlignmentDirectional(0, -0.8),
-                                    //textDirectionForGeometry: TextDirection.rtl,
-                                    primaryColors: const [
-                                      Colors.pink,
-                                      Colors.pinkAccent,
-                                      Colors.white,
-                                    ],
-                                    secondaryColors: const [
-                                      Colors.white,
-                                      Colors.blueAccent,
-                                      Colors.blue,
-                                    ],
-                                    child: CircleAvatar(
-                                      backgroundColor:
-                                          Colors.green.withOpacity(0.2),
-                                      radius: 10,
-                                      child: Center(
-                                        child: Text(
-                                          newMessageCounter.toString(),
-                                          style: TextStyle(
-                                            fontSize: 10,
-                                            color: Theme.of(context)
-                                                .colorScheme
-                                                .tertiary,
-                                          ),
-                                        ),
+                                CircleAvatar(
+                                  backgroundColor:
+                                      Colors.green.withOpacity(0.2),
+                                  radius: 10,
+                                  child: Center(
+                                    child: Text(
+                                      newMessageCounter.toString(),
+                                      style: TextStyle(
+                                        fontSize: 10,
+                                        color: Theme.of(context)
+                                            .colorScheme
+                                            .tertiary,
                                       ),
                                     ),
                                   ),
