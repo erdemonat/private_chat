@@ -1,7 +1,11 @@
 // dark mode
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 ThemeData blackTheme = ThemeData(
+  textTheme: GoogleFonts.poppinsTextTheme(),
+  scaffoldBackgroundColor: Colors.grey.shade900,
+  dialogBackgroundColor: Colors.grey.shade900,
   focusColor: Colors.grey.shade300,
   dividerColor: Colors.grey.shade300,
   highlightColor: Colors.grey.shade300,
@@ -18,25 +22,30 @@ ThemeData blackTheme = ThemeData(
 
 // light mode
 ThemeData whiteTheme = ThemeData(
+  textTheme: GoogleFonts.poppinsTextTheme(),
+  scaffoldBackgroundColor: Colors.grey.shade200,
+  dialogBackgroundColor: Colors.grey.shade300,
+  focusColor: Colors.grey.shade900,
   dividerColor: Colors.grey.shade900,
   highlightColor: Colors.grey.shade900,
   colorScheme: ColorScheme.light(
-    surface: Colors.grey.shade300,
-    primary: Colors.grey.shade400,
-    secondary: Colors.grey.shade200,
+    surface: Colors.grey.shade200,
+    primary: Colors.grey.shade500,
+    secondary: Colors.grey.shade700,
     tertiary: Colors.grey.shade900,
     inversePrimary: Colors.grey.shade900,
     onSurface: Colors.grey.shade900,
-    outlineVariant: Colors.grey.shade500,
+    outlineVariant: Colors.grey.shade800,
   ),
 );
 
 ThemeData highContrastTheme = ThemeData(
+  textTheme: GoogleFonts.poppinsTextTheme(),
   scaffoldBackgroundColor: Colors.black,
   dialogBackgroundColor: Colors.black,
   dividerColor: Colors.black,
   highlightColor: Colors.black,
-  colorScheme: const ColorScheme.light(
+  colorScheme: const ColorScheme.dark(
     surface: Colors.black,
     primary: Colors.amber,
     secondary: Colors.blue,

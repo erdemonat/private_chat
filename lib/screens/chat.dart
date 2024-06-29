@@ -1,8 +1,11 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:privatechat/constants.dart';
-import 'package:privatechat/util/new_message.dart';
+import 'package:intl/intl.dart';
+import 'package:privatechat/components/message_bubble.dart';
+import 'package:privatechat/theme/constants.dart';
+import 'package:privatechat/components/new_message.dart';
 
 class ChatScreen extends StatefulWidget {
   final String recipientUserId;
@@ -19,19 +22,25 @@ class ChatScreen extends StatefulWidget {
 }
 
 class _ChatScreenState extends State<ChatScreen> {
-  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  final FirebaseFirestore _db = FirebaseFirestore.instance;
   final FirebaseAuth _auth = FirebaseAuth.instance;
   String? recipientImageUrl;
+  String? chatRoomId;
+
+  bool isMe(String senderId) {
+    return _auth.currentUser != null && senderId == _auth.currentUser!.uid;
+  }
 
   @override
   void initState() {
     super.initState();
     _loadRecipientData();
+    _createChatRoom();
   }
 
   void _loadRecipientData() async {
     var recipientUserDoc =
-        await _firestore.collection('users').doc(widget.recipientUserId).get();
+        await _db.collection('users').doc(widget.recipientUserId).get();
 
     if (recipientUserDoc.exists) {
       setState(() {
@@ -40,10 +49,76 @@ class _ChatScreenState extends State<ChatScreen> {
     }
   }
 
+  void _createChatRoom() async {
+    var userId1 = _auth.currentUser!.uid;
+    var userId2 = widget.recipientUserId;
+    chatRoomId = getChatRoomId(userId1, userId2);
+    createChatRoom(userId1, userId2);
+  }
+
+  void createChatRoom(String userId1, String userId2) async {
+    var chatRoomId = getChatRoomId(userId1, userId2);
+    var chatRoomData = {
+      'participants': [userId1, userId2],
+    };
+
+    await _db
+        .collection('chats')
+        .doc(chatRoomId)
+        .set(chatRoomData, SetOptions(merge: true));
+  }
+
+  String getChatRoomId(String userId1, String userId2) {
+    if (userId1 == userId2) {
+      return '$userId1-ownnotes';
+    } else {
+      List<String> ids = [userId1, userId2];
+      ids.sort();
+      return ids.join('-');
+    }
+  }
+
+  void sendMessage(String messageText) async {
+    if (chatRoomId != null && messageText.isNotEmpty) {
+      var messageData = {
+        'text': messageText,
+        'senderId': _auth.currentUser!.uid,
+        'timestamp': FieldValue.serverTimestamp(),
+        'isRead': false,
+      };
+
+      await _db
+          .collection('chats')
+          .doc(chatRoomId)
+          .collection('messages')
+          .add(messageData);
+
+      await _db.collection('chats').doc(chatRoomId).set(
+        {
+          'lastMessageTimestamp': FieldValue.serverTimestamp(),
+          'newMessageCounter-${_auth.currentUser!.uid}':
+              FieldValue.increment(1),
+        },
+        SetOptions(merge: true),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        leading: IconButton(
+            onPressed: () {
+              Navigator.pop(context);
+              _db.collection('chats').doc(chatRoomId).update(
+                {
+                  'newMessageCounter-${widget.recipientUserId}': 0,
+                  'isOnChat-${_auth.currentUser!.uid}': false
+                },
+              );
+            },
+            icon: const Icon(Icons.arrow_back)),
         actions: [
           Padding(
             padding: const EdgeInsets.only(right: 20),
@@ -64,86 +139,127 @@ class _ChatScreenState extends State<ChatScreen> {
         title: Row(
           children: [
             CircleAvatar(
-              backgroundImage: recipientImageUrl != null
-                  ? NetworkImage(recipientImageUrl!)
-                  : null,
-              child:
-                  recipientImageUrl == null ? const Icon(Icons.person) : null,
+              child: recipientImageUrl != null
+                  ? CachedNetworkImage(
+                      imageUrl: recipientImageUrl!,
+                      placeholder: (context, url) =>
+                          const CircularProgressIndicator(),
+                      errorWidget: (context, url, error) =>
+                          const Icon(Icons.error),
+                      imageBuilder: (context, imageProvider) => CircleAvatar(
+                        backgroundImage: imageProvider,
+                      ),
+                    )
+                  : const CircularProgressIndicator(),
             ),
             const SizedBox(
               width: 12,
             ),
-            Text(
-              widget.recipientUsername,
-              style: kTitleText,
-            )
-          ],
-        ),
-      ),
-      body: SafeArea(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Expanded(
-              child: StreamBuilder<QuerySnapshot>(
-                stream: _firestore
-                    .collection('chats')
-                    .doc(getChatRoomId())
-                    .collection('messages')
-                    .orderBy('timestamp', descending: true)
-                    .snapshots(),
+            Flexible(
+              child: StreamBuilder(
+                stream: _db.collection('chats').doc(chatRoomId).snapshots(),
                 builder: (context, snapshot) {
                   if (!snapshot.hasData) {
-                    return const Center(child: CircularProgressIndicator());
+                    return Text(
+                      '',
+                      style: kAppbarTitle,
+                    );
                   }
-
-                  var messages = snapshot.data!.docs;
-
-                  return ListView.builder(
-                    reverse: true,
-                    itemCount: messages.length,
-                    itemBuilder: (context, index) {
-                      var message = messages[index];
-
-                      return ListTile(
-                        title: Text(message['text']),
-                        subtitle: Text(message['sender']),
-                      );
-                    },
+                  var statusDoc = snapshot.data!;
+                  bool isOnline =
+                      statusDoc['isOnChat-${widget.recipientUserId}'];
+                  return Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        (widget.recipientUserId == _auth.currentUser!.uid
+                            ? 'You'
+                            : widget.recipientUsername),
+                        style: kAppbarTitle,
+                      ),
+                      if (isOnline)
+                        const Text(
+                          'online',
+                          style: TextStyle(fontSize: 14),
+                        )
+                    ],
                   );
                 },
               ),
             ),
-            NewMessage(onSendMessage: sendMessage),
           ],
         ),
       ),
+      body: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(colors: [
+            Theme.of(context).colorScheme.primary.withOpacity(0.3),
+            Theme.of(context).colorScheme.secondary.withOpacity(0.3),
+          ], begin: Alignment.topLeft, end: Alignment.bottomRight),
+          image: DecorationImage(
+            image: const AssetImage(
+              'assets/images/chat-back-3.png',
+            ), // Buraya resim yolunu yazın
+            colorFilter: ColorFilter.mode(
+                Theme.of(context).colorScheme.surface, BlendMode.srcATop),
+
+            fit: BoxFit.cover,
+          ),
+        ),
+        child: SafeArea(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Expanded(
+                child: StreamBuilder<QuerySnapshot>(
+                  stream: chatRoomId != null
+                      ? _db
+                          .collection('chats')
+                          .doc(chatRoomId)
+                          .collection('messages')
+                          .orderBy('timestamp', descending: true)
+                          .snapshots()
+                      : const Stream.empty(),
+                  builder: (context, snapshot) {
+                    if (!snapshot.hasData) {
+                      return const Center(child: CircularProgressIndicator());
+                    }
+
+                    var messages = snapshot.data!.docs;
+
+                    return ListView.builder(
+                      reverse: true,
+                      itemCount: messages.length,
+                      itemBuilder: (context, index) {
+                        var message = messages[index];
+                        var timestamp = message['timestamp'];
+                        var timeString = '';
+
+                        if (timestamp != null) {
+                          var dateTime = timestamp.toDate();
+                          timeString = DateFormat('HH:mm').format(dateTime);
+                        }
+
+                        var senderId = message['senderId'];
+                        bool sentByMe = isMe(senderId);
+
+                        return MessageBubble(
+                          sentByMe: sentByMe,
+                          message: message,
+                          timeString: timeString,
+                          checkColor:
+                              message['isRead'] ? Colors.blue : Colors.grey,
+                        );
+                      },
+                    );
+                  },
+                ),
+              ),
+              NewMessage(onSendMessage: sendMessage),
+            ],
+          ),
+        ),
+      ),
     );
-  }
-
-  void sendMessage(String messageText) {
-    if (messageText.isNotEmpty) {
-      var chatRoomId = getChatRoomId();
-      var message = {
-        'text': messageText,
-        'sender': widget.recipientUsername,
-        'timestamp': FieldValue.serverTimestamp(),
-      };
-
-      _firestore
-          .collection('chats')
-          .doc(chatRoomId)
-          .collection('messages')
-          .add(message);
-    }
-  }
-
-  String getChatRoomId() {
-    var currentUser = _auth.currentUser!;
-    var otherUser = widget.recipientUserId;
-
-    List<String> ids = [currentUser.uid, otherUser];
-    ids.sort();
-    return ids.join('-');
   }
 }

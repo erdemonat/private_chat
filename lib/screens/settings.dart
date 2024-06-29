@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:privatechat/constants.dart';
-import 'package:privatechat/theme/theme_provider.dart';
-import 'package:provider/provider.dart';
+import 'package:privatechat/theme/constants.dart';
+import 'package:privatechat/components/theme_setting_tile.dart';
 
 class SettingsScreen extends StatelessWidget {
   const SettingsScreen({super.key});
@@ -17,51 +16,14 @@ class SettingsScreen extends StatelessWidget {
         ),
         title: Text(
           'Settings',
-          style: kTitleText,
+          style: kAppbarTitle,
         ),
       ),
-      body: Container(
-        padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 12),
-        margin: const EdgeInsets.symmetric(vertical: 20, horizontal: 10),
-        decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(8),
-            color: Theme.of(context).colorScheme.primary),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      body: const Padding(
+        padding: EdgeInsets.only(top: 25),
+        child: Column(
           children: [
-            Text(
-              'Theme',
-              style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                  color: Theme.of(context).colorScheme.inversePrimary),
-            ),
-            DropdownButton<AppTheme>(
-              elevation: 0,
-              icon: const Icon(Icons.arrow_drop_down_rounded),
-              iconSize: 36,
-              alignment: Alignment.center,
-              underline: const SizedBox(),
-              dropdownColor: Theme.of(context).colorScheme.secondary,
-              iconEnabledColor: Theme.of(context).colorScheme.tertiary,
-              style: TextStyle(
-                color: Theme.of(context).colorScheme.inversePrimary,
-                fontSize: 15,
-                fontWeight: FontWeight.w600,
-              ),
-              value: context.watch<ThemeProvider>().selectedTheme,
-              onChanged: (value) {
-                if (value != null) {
-                  context.read<ThemeProvider>().setTheme(value);
-                }
-              },
-              items: AppTheme.values.map((AppTheme theme) {
-                return DropdownMenuItem<AppTheme>(
-                  value: theme,
-                  child: Text(theme.toString().split('.').last),
-                );
-              }).toList(),
-            ),
+            ThemeSettingTile(),
           ],
         ),
       ),

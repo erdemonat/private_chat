@@ -23,7 +23,7 @@ class MyNavigationBar extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           duration: const Duration(milliseconds: 400),
           tabBackgroundColor: Theme.of(context).colorScheme.secondary,
-          color: Theme.of(context).colorScheme.primary,
+          color: Theme.of(context).colorScheme.secondary,
           tabs: const [
             GButton(
               icon: Icons.chat_bubble_rounded,
