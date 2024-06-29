@@ -98,7 +98,6 @@ class _ChatScreenState extends State<ChatScreen> {
           'lastMessageTimestamp': FieldValue.serverTimestamp(),
           'newMessageCounter-${_auth.currentUser!.uid}':
               FieldValue.increment(1),
-          'isOnChat-${_auth.currentUser!.uid}': true
         },
         SetOptions(merge: true),
       );
@@ -156,8 +155,20 @@ class _ChatScreenState extends State<ChatScreen> {
             const SizedBox(
               width: 12,
             ),
-            true
-                ? Column(
+            Flexible(
+              child: StreamBuilder(
+                stream: _db.collection('chats').doc(chatRoomId).snapshots(),
+                builder: (context, snapshot) {
+                  if (!snapshot.hasData) {
+                    return Text(
+                      '',
+                      style: kAppbarTitle,
+                    );
+                  }
+                  var statusDoc = snapshot.data!;
+                  bool isOnline =
+                      statusDoc['isOnChat-${widget.recipientUserId}'];
+                  return Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
@@ -166,36 +177,35 @@ class _ChatScreenState extends State<ChatScreen> {
                             : widget.recipientUsername),
                         style: kAppbarTitle,
                       ),
-                      Text(
-                        'online',
-                        style: TextStyle(fontSize: 14),
-                      )
+                      if (isOnline)
+                        const Text(
+                          'online',
+                          style: TextStyle(fontSize: 14),
+                        )
                     ],
-                  )
-                : Text(
-                    (widget.recipientUserId == _auth.currentUser!.uid
-                        ? 'You'
-                        : widget.recipientUsername),
-                    style: kAppbarTitle,
-                  )
+                  );
+                },
+              ),
+            ),
           ],
         ),
       ),
       body: Container(
         decoration: BoxDecoration(
-            gradient: LinearGradient(colors: [
-              Theme.of(context).colorScheme.primary.withOpacity(0.3),
-              Theme.of(context).colorScheme.secondary.withOpacity(0.3),
-            ], begin: Alignment.topLeft, end: Alignment.bottomRight),
-            image: DecorationImage(
-              image: const AssetImage(
-                'assets/images/chat-back-3.png',
-              ), // Buraya resim yolunu yazın
-              colorFilter: ColorFilter.mode(
-                  Theme.of(context).colorScheme.surface, BlendMode.srcATop),
+          gradient: LinearGradient(colors: [
+            Theme.of(context).colorScheme.primary.withOpacity(0.3),
+            Theme.of(context).colorScheme.secondary.withOpacity(0.3),
+          ], begin: Alignment.topLeft, end: Alignment.bottomRight),
+          image: DecorationImage(
+            image: const AssetImage(
+              'assets/images/chat-back-3.png',
+            ), // Buraya resim yolunu yazın
+            colorFilter: ColorFilter.mode(
+                Theme.of(context).colorScheme.surface, BlendMode.srcATop),
 
-              fit: BoxFit.cover,
-            )),
+            fit: BoxFit.cover,
+          ),
+        ),
         child: SafeArea(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
