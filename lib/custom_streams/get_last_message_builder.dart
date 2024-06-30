@@ -42,11 +42,6 @@ class GetLastMessageBuilder extends StatelessWidget {
     return StreamBuilder<QuerySnapshot>(
       stream: stream,
       builder: (context, messageSnapshot) {
-        if (messageSnapshot.connectionState == ConnectionState.waiting) {
-          return const ListTile(
-            title: LinearProgressIndicator(),
-          );
-        }
         if (!messageSnapshot.hasData || messageSnapshot.data!.docs.isEmpty) {
           return const ListTile(
             title: Text('No messages yet'),

@@ -20,7 +20,9 @@ class GetChatMessagesBuilder extends StatelessWidget {
       stream: stream,
       builder: (context, snapshot) {
         if (!snapshot.hasData) {
-          return const Center(child: CircularProgressIndicator());
+          return const Center(
+            child: CircularProgressIndicator(),
+          );
         }
 
         var messages = snapshot.data!.docs;

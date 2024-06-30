@@ -69,12 +69,12 @@ class _ChatsScreenState extends State<ChatsScreen> {
                     );
 
               return GetRecipientUserDataBuilder(
-                  stream:
-                      firestoreProvider.getRecipientUserData(recipientUserId),
-                  chatRoomId: chatRoomId,
-                  recipientUserId: recipientUserId,
-                  currentUser: currentUser,
-                  chatDoc: chatDoc);
+                stream: firestoreProvider.getRecipientUserData(recipientUserId),
+                chatRoomId: chatRoomId,
+                recipientUserId: recipientUserId,
+                currentUser: currentUser,
+                chatDoc: chatDoc,
+              );
             },
           ),
         );

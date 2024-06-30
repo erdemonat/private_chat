@@ -2,7 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:privatechat/custom_streams/getOnlineStatus_builder.dart';
+import 'package:privatechat/custom_streams/get_online_status_builder.dart';
 import 'package:privatechat/custom_streams/get_chat_messages_builder.dart';
 import 'package:privatechat/providers/stream_provider.dart';
 import 'package:privatechat/components/new_message.dart';
@@ -33,6 +33,16 @@ class _ChatScreenState extends State<ChatScreen> {
     super.initState();
     _loadRecipientData();
     _createChatRoom();
+    _onlineStatusFix();
+  }
+
+  void _onlineStatusFix() async {
+    await _db.collection('chats').doc(chatRoomId).update(
+      {
+        'isOnChat-${widget.recipientUserId}': false,
+        'isOnChat-${_auth.currentUser!.uid}': true,
+      },
+    );
   }
 
   void _loadRecipientData() async {

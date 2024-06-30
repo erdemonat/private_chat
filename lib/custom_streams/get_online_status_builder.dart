@@ -26,7 +26,7 @@ class GetOnlineStatus extends StatelessWidget {
           );
         }
         var statusDoc = snapshot.data!;
-        bool isOnline = statusDoc['isOnChat-$recipientUserId'];
+        bool isOnline = statusDoc['isOnChat-$recipientUserId'] ?? false;
 
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,

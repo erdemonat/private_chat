@@ -18,6 +18,11 @@ ThemeData blackTheme = ThemeData(
     onSurface: Colors.grey.shade300,
     outlineVariant: Colors.grey.shade700,
   ),
+  textSelectionTheme: TextSelectionThemeData(
+    cursorColor: Colors.grey.shade300,
+    selectionColor: Colors.grey.shade900.withOpacity(0.4),
+    selectionHandleColor: Colors.grey.shade300,
+  ),
 );
 
 // light mode
@@ -36,6 +41,11 @@ ThemeData whiteTheme = ThemeData(
     inversePrimary: Colors.grey.shade900,
     onSurface: Colors.grey.shade900,
     outlineVariant: Colors.grey.shade800,
+  ),
+  textSelectionTheme: TextSelectionThemeData(
+    cursorColor: Colors.grey.shade900,
+    selectionColor: Colors.grey.shade200.withOpacity(0.4),
+    selectionHandleColor: Colors.grey.shade900,
   ),
 );
 
@@ -56,5 +66,10 @@ ThemeData highContrastTheme = ThemeData(
   ),
   iconTheme: const IconThemeData(
     color: Colors.amber,
+  ),
+  textSelectionTheme: const TextSelectionThemeData(
+    cursorColor: Colors.red,
+    selectionColor: Colors.black45,
+    selectionHandleColor: Colors.red,
   ),
 );
