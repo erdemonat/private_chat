@@ -32,7 +32,11 @@ class _ChatScreenState extends State<ChatScreen> {
   void initState() {
     super.initState();
     _loadRecipientData();
-    _createChatRoom();
+    _createChatRoomAndFixStatus();
+  }
+
+  void _createChatRoomAndFixStatus() async {
+    await _createChatRoom();
     _onlineStatusFix();
   }
 
@@ -56,14 +60,14 @@ class _ChatScreenState extends State<ChatScreen> {
     }
   }
 
-  void _createChatRoom() async {
+  Future<void> _createChatRoom() async {
     var userId1 = _auth.currentUser!.uid;
     var userId2 = widget.recipientUserId;
     chatRoomId = getChatRoomId(userId1, userId2);
     createChatRoom(userId1, userId2);
   }
 
-  void createChatRoom(String userId1, String userId2) async {
+  Future<void> createChatRoom(String userId1, String userId2) async {
     var chatRoomId = getChatRoomId(userId1, userId2);
     var chatRoomData = {
       'participants': [userId1, userId2],
