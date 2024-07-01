@@ -29,6 +29,16 @@ class GetRecipientUserDataBuilder extends StatelessWidget {
     return StreamBuilder<Map<String, String>>(
       stream: stream,
       builder: (context, userDataSnapshot) {
+        if (userDataSnapshot.connectionState == ConnectionState.waiting) {
+          return const ListTile(
+            title: LinearProgressIndicator(),
+          );
+        }
+        if (userDataSnapshot.hasError) {
+          return ListTile(
+            title: Text('Error: ${userDataSnapshot.error}'),
+          );
+        }
         if (!userDataSnapshot.hasData) {
           return const ListTile(
             title: LinearProgressIndicator(),

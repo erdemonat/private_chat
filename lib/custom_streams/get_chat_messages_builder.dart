@@ -19,6 +19,16 @@ class GetChatMessagesBuilder extends StatelessWidget {
     return StreamBuilder<QuerySnapshot>(
       stream: stream,
       builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const ListTile(
+            title: LinearProgressIndicator(),
+          );
+        }
+        if (snapshot.hasError) {
+          return ListTile(
+            title: Text('Error: ${snapshot.error}'),
+          );
+        }
         if (!snapshot.hasData) {
           return const Center(
             child: CircularProgressIndicator(),
