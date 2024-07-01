@@ -1,4 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -33,6 +34,17 @@ class _ChatScreenState extends State<ChatScreen> {
     super.initState();
     _loadRecipientData();
     _createChatRoomAndFixStatus();
+    setupPushNotifications();
+  }
+
+  void setupPushNotifications() async {
+    final fcm = FirebaseMessaging.instance;
+
+    await fcm.requestPermission();
+
+    fcm.subscribeToTopic('chat');
+    // final token = await fcm.getToken();
+    // print(token);
   }
 
   void _createChatRoomAndFixStatus() async {
