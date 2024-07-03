@@ -13,7 +13,7 @@ class ChatScreen extends StatefulWidget {
   final String recipientUserId;
   final String recipientUsername;
 
-  const ChatScreen({
+  ChatScreen({
     super.key,
     required this.recipientUserId,
     required this.recipientUsername,
@@ -96,7 +96,9 @@ class _ChatScreenState extends State<ChatScreen> {
         'text': messageText,
         'senderId': _auth.currentUser!.uid,
         'timestamp': FieldValue.serverTimestamp(),
-        'isRead': false,
+        'isRead': Provider.of<FirestoreStreamProviders>(context).isOnline
+            ? true
+            : false,
       };
 
       await _db

@@ -1,6 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:privatechat/providers/stream_provider.dart';
 import 'package:privatechat/theme/constants.dart';
+import 'package:provider/provider.dart';
 
 class GetOnlineStatus extends StatelessWidget {
   final Stream stream;
@@ -40,6 +42,9 @@ class GetOnlineStatus extends StatelessWidget {
         }
         var statusDoc = snapshot.data!;
         bool isOnline = statusDoc['isOnChat-$recipientUserId'] ?? false;
+
+        Provider.of<FirestoreStreamProviders>(context, listen: false)
+            .setOnlineStatus(isOnline);
 
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,

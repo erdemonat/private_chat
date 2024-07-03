@@ -35,6 +35,7 @@ class GetLastMessageBuilder extends StatelessWidget {
           .collection('chats')
           .doc(chatId)
           .collection('messages')
+          .orderBy('timestamp', descending: true)
           .get();
 
       for (DocumentSnapshot messageSnapshot in messagesSnapshot.docs) {

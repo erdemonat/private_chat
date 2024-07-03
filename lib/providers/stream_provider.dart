@@ -6,6 +6,15 @@ var _db = FirebaseFirestore.instance;
 var _auth = FirebaseAuth.instance;
 
 class FirestoreStreamProviders with ChangeNotifier {
+  bool _isOnline = false;
+
+  bool get isOnline => _isOnline;
+
+  void setOnlineStatus(bool status) {
+    _isOnline = status;
+    notifyListeners();
+  }
+
   //
   // Chatroom üstündeki fieldlara erişmek için
   Stream<DocumentSnapshot> getChatRoomFields(chatRoomId) {
