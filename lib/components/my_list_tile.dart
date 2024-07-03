@@ -44,9 +44,17 @@ class _EditableListTileState extends State<EditableListTile> {
   @override
   Widget build(BuildContext context) {
     return ListTile(
+      leading: Transform.translate(
+        offset: const Offset(-4, -7),
+        child: Icon(
+          model.icon,
+          size: 28,
+        ),
+      ),
       title: Text(model.title),
       subtitle: _isEditingMode ? _subTitleTextField : Text(model.subTitle),
       trailing: _isEditingMode ? _saveButton : _editButton,
+      visualDensity: VisualDensity.adaptivePlatformDensity,
     );
   }
 

@@ -127,41 +127,39 @@ class _AuthScreenState extends State<AuthScreen> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               const AuthIcon(),
-              SafeArea(
-                child: AuthForm(
-                  formKey: _formKey,
-                  isLogin: _isLogin,
-                  isAuthenticating: _isAuthenticating,
-                  passwordController: _passwordController,
-                  confirmPasswordController: _confirmPasswordController,
-                  onToggleLoginMode: () {
-                    setState(() {
-                      _isLogin = !_isLogin;
-                    });
-                  },
-                  onSubmit: _submit,
-                  onEmailSaved: (value) {
-                    _enteredEmail = value!;
-                  },
-                  onPasswordSaved: (value) {
-                    _enteredPassword = value!;
-                  },
-                  onConfirmPasswordSaved: (value) {
-                    enteredConfirmPassword = value!;
-                  },
-                  isObscureText: _isObscureText,
-                  toggleObscureText: () {
-                    setState(() {
-                      _isObscureText = !_isObscureText;
-                    });
-                  },
-                  isObscureTextConfirm: _isObscureTextConfirm,
-                  toggleObscureTextConfirm: () {
-                    setState(() {
-                      _isObscureTextConfirm = !_isObscureTextConfirm;
-                    });
-                  },
-                ),
+              AuthForm(
+                formKey: _formKey,
+                isLogin: _isLogin,
+                isAuthenticating: _isAuthenticating,
+                passwordController: _passwordController,
+                confirmPasswordController: _confirmPasswordController,
+                onToggleLoginMode: () {
+                  setState(() {
+                    _isLogin = !_isLogin;
+                  });
+                },
+                onSubmit: _submit,
+                onEmailSaved: (value) {
+                  _enteredEmail = value!;
+                },
+                onPasswordSaved: (value) {
+                  _enteredPassword = value!;
+                },
+                onConfirmPasswordSaved: (value) {
+                  enteredConfirmPassword = value!;
+                },
+                isObscureText: _isObscureText,
+                toggleObscureText: () {
+                  setState(() {
+                    _isObscureText = !_isObscureText;
+                  });
+                },
+                isObscureTextConfirm: _isObscureTextConfirm,
+                toggleObscureTextConfirm: () {
+                  setState(() {
+                    _isObscureTextConfirm = !_isObscureTextConfirm;
+                  });
+                },
               ),
             ],
           ),

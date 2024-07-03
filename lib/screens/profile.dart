@@ -61,25 +61,28 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     onUpdatePhoto: () => _updatePhoto(context),
                   ),
                   const SizedBox(height: 32),
-                  UserInfoList(
-                    username: _username,
-                    status: _userStatus,
-                    email: _userEmail,
-                    onUpdateUsername: (updatedModel) async {
-                      await db
-                          .collection('users')
-                          .doc(authenticatedUser.uid)
-                          .update({'username': updatedModel.subTitle});
-                    },
-                    onUpdateStatus: (updatedModel) async {
-                      await db
-                          .collection('users')
-                          .doc(authenticatedUser.uid)
-                          .update({'status': updatedModel.subTitle});
-                    },
-                    onUpdateEmail: (updatedModel) async {
-                      await _updateEmail(updatedModel.subTitle);
-                    },
+                  Padding(
+                    padding: const EdgeInsets.only(left: 23),
+                    child: UserInfoList(
+                      username: _username,
+                      status: _userStatus,
+                      email: _userEmail,
+                      onUpdateUsername: (updatedModel) async {
+                        await db
+                            .collection('users')
+                            .doc(authenticatedUser.uid)
+                            .update({'username': updatedModel.subTitle});
+                      },
+                      onUpdateStatus: (updatedModel) async {
+                        await db
+                            .collection('users')
+                            .doc(authenticatedUser.uid)
+                            .update({'status': updatedModel.subTitle});
+                      },
+                      onUpdateEmail: (updatedModel) async {
+                        await _updateEmail(updatedModel.subTitle);
+                      },
+                    ),
                   ),
                   DeleteAccountButton(
                     onDelete: _deleteAccount,

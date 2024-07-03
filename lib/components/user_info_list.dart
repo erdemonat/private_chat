@@ -21,30 +21,30 @@ class UserInfoList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 16),
-      child: Column(
-        children: [
-          EditableListTile(
-            model: ListModel(title: 'Username', subTitle: username),
-            onChanged: onUpdateUsername,
-            hintText: 'Enter username (max 12 chars)',
-            maxLength: 12,
-          ),
-          EditableListTile(
-            model: ListModel(title: 'Status', subTitle: status),
-            onChanged: onUpdateStatus,
-            hintText: 'Enter status (max 20 chars)',
-            maxLength: 20,
-          ),
-          EditableListTile(
-            model: ListModel(title: 'Email', subTitle: email),
-            onChanged: onUpdateEmail,
-            hintText: '232',
-            maxLength: 20,
-          ),
-        ],
-      ),
+    return Column(
+      children: [
+        EditableListTile(
+          model: ListModel(
+              title: 'Username', subTitle: username, icon: Icons.person),
+          onChanged: onUpdateUsername,
+          hintText: 'Enter username (max 12 chars)',
+          maxLength: 12,
+        ),
+        EditableListTile(
+          model: ListModel(
+              title: 'Status', subTitle: status, icon: Icons.info_outline),
+          onChanged: onUpdateStatus,
+          hintText: 'Enter status (max 20 chars)',
+          maxLength: 20,
+        ),
+        EditableListTile(
+          model: ListModel(
+              title: 'Email', subTitle: email, icon: Icons.email_outlined),
+          onChanged: onUpdateEmail,
+          hintText: '232',
+          maxLength: 20,
+        ),
+      ],
     );
   }
 }

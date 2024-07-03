@@ -28,7 +28,7 @@ class ProfileAvatar extends StatelessWidget {
         CircleAvatar(
           child: IconButton(
             onPressed: onUpdatePhoto,
-            icon: const Icon(Icons.add, size: 25),
+            icon: const Icon(Icons.camera_alt_outlined, size: 25),
           ),
         )
       ],

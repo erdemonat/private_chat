@@ -43,7 +43,7 @@ class AuthForm extends StatelessWidget {
       child: Column(
         children: [
           Padding(
-            padding: const EdgeInsets.only(right: 24, left: 24, top: 4),
+            padding: const EdgeInsets.only(right: 32, left: 32),
             child: TextFormField(
               style: TextStyle(
                   color: Theme.of(context).colorScheme.tertiary,
@@ -63,7 +63,7 @@ class AuthForm extends StatelessWidget {
             ),
           ),
           Padding(
-            padding: const EdgeInsets.only(right: 24, left: 24, top: 10),
+            padding: const EdgeInsets.only(right: 32, left: 32, top: 10),
             child: TextFormField(
               style: TextStyle(
                   color: Theme.of(context).colorScheme.tertiary,
@@ -90,7 +90,7 @@ class AuthForm extends StatelessWidget {
           ),
           if (!isLogin)
             Padding(
-              padding: const EdgeInsets.only(right: 24, left: 24, top: 10),
+              padding: const EdgeInsets.only(right: 32, left: 32, top: 10),
               child: TextFormField(
                 style: TextStyle(
                     color: Theme.of(context).colorScheme.tertiary,

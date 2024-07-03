@@ -27,10 +27,10 @@ class _IntroScreenState extends State<IntroScreen>
       vsync: this,
     );
 
-    _scaleAnimation = Tween<double>(begin: 1.0, end: 1.2).animate(
+    _scaleAnimation = Tween<double>(begin: 1.0, end: 1.1).animate(
       CurvedAnimation(
         parent: _controller,
-        curve: Curves.easeInOut,
+        curve: Curves.ease,
       ),
     );
 
@@ -61,8 +61,8 @@ class _IntroScreenState extends State<IntroScreen>
               return const AuthScreen();
             },
           ),
-          transitionType: TransitionType.slideFromTop,
-          duration: const Duration(milliseconds: 200)),
+          transitionType: TransitionType.slideFromBottom,
+          duration: const Duration(milliseconds: 1000)),
     );
   }
 

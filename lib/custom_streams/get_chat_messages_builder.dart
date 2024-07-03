@@ -57,7 +57,7 @@ class GetChatMessagesBuilder extends StatelessWidget {
               sentByMe: sentByMe,
               message: message,
               timeString: timeString,
-              checkColor: message['isRead'] ? Colors.blue : Colors.grey,
+              checkColor: message['isRead'] ? Colors.blue : Colors.transparent,
             );
           },
         );

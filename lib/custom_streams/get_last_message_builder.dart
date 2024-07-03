@@ -26,15 +26,34 @@ class GetLastMessageBuilder extends StatelessWidget {
       required this.currentUser,
       required this.chatDoc});
 
-  void markMessageAsRead(String chatId, String messageId) async {
-    await FirebaseFirestore.instance
-        .collection('chats')
-        .doc(chatId)
-        .collection('messages')
-        .doc(messageId)
-        .update({
-      'isRead': true,
-    });
+  void markMessageAsRead(String chatId, String id) async {
+    User? currentUser = FirebaseAuth.instance.currentUser;
+
+    if (currentUser != null) {
+      // Get all messages in the chat
+      QuerySnapshot messagesSnapshot = await FirebaseFirestore.instance
+          .collection('chats')
+          .doc(chatId)
+          .collection('messages')
+          .get();
+
+      for (DocumentSnapshot messageSnapshot in messagesSnapshot.docs) {
+        Map<String, dynamic> messageData =
+            messageSnapshot.data() as Map<String, dynamic>;
+
+        // Check if the current user is the sender
+        if (messageData['senderId'] != currentUser.uid &&
+            !messageData['isRead']) {
+          // Update the 'isRead' field to true
+          await FirebaseFirestore.instance
+              .collection('chats')
+              .doc(chatId)
+              .collection('messages')
+              .doc(messageSnapshot.id)
+              .update({'isRead': true});
+        }
+      }
+    }
   }
 
   @override

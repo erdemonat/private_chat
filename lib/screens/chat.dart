@@ -34,17 +34,6 @@ class _ChatScreenState extends State<ChatScreen> {
     super.initState();
     _loadRecipientData();
     _createChatRoomAndFixStatus();
-    setupPushNotifications();
-  }
-
-  void setupPushNotifications() async {
-    final fcm = FirebaseMessaging.instance;
-
-    await fcm.requestPermission();
-
-    fcm.subscribeToTopic('chat');
-    // final token = await fcm.getToken();
-    // print(token);
   }
 
   void _createChatRoomAndFixStatus() async {
