@@ -1,5 +1,4 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -13,7 +12,7 @@ class ChatScreen extends StatefulWidget {
   final String recipientUserId;
   final String recipientUsername;
 
-  ChatScreen({
+  const ChatScreen({
     super.key,
     required this.recipientUserId,
     required this.recipientUsername,
@@ -44,7 +43,6 @@ class _ChatScreenState extends State<ChatScreen> {
   void _onlineStatusFix() async {
     await _db.collection('chats').doc(chatRoomId).update(
       {
-        'isOnChat-${widget.recipientUserId}': false,
         'isOnChat-${_auth.currentUser!.uid}': true,
       },
     );
@@ -65,13 +63,20 @@ class _ChatScreenState extends State<ChatScreen> {
     var userId1 = _auth.currentUser!.uid;
     var userId2 = widget.recipientUserId;
     chatRoomId = getChatRoomId(userId1, userId2);
-    createChatRoom(userId1, userId2);
+
+    var chatRoomDoc = await _db.collection('chats').doc(chatRoomId).get();
+
+    if (!chatRoomDoc.exists) {
+      createChatRoom(userId1, userId2);
+    }
   }
 
   Future<void> createChatRoom(String userId1, String userId2) async {
     var chatRoomId = getChatRoomId(userId1, userId2);
     var chatRoomData = {
       'participants': [userId1, userId2],
+      'isOnChat-$userId1': true,
+      'isOnChat-$userId2': false,
     };
 
     await _db
@@ -96,7 +101,8 @@ class _ChatScreenState extends State<ChatScreen> {
         'text': messageText,
         'senderId': _auth.currentUser!.uid,
         'timestamp': FieldValue.serverTimestamp(),
-        'isRead': Provider.of<FirestoreStreamProviders>(context).isOnline
+        'isRead': Provider.of<FirestoreStreamProviders>(context, listen: false)
+                .isOnline
             ? true
             : false,
       };

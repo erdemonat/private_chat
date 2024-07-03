@@ -21,20 +21,10 @@ class GetOnlineStatus extends StatelessWidget {
     return StreamBuilder(
       stream: stream,
       builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return Text(
-            '',
-            style: kAppbarTitle,
-          );
-        }
-        if (snapshot.hasError) {
-          return Text(
-            '',
-            style: kAppbarTitle,
-          );
-        }
-
-        if (!snapshot.hasData) {
+        if (!snapshot.hasData ||
+            !snapshot.data!.exists ||
+            snapshot.connectionState == ConnectionState.waiting ||
+            snapshot.hasError) {
           return Text(
             '',
             style: kAppbarTitle,
