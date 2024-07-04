@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:privatechat/components/auth_screen_logo.dart';
 import 'package:privatechat/model/custom_page_router.dart';
 import 'package:privatechat/screens/auth.dart';
@@ -16,7 +15,6 @@ class IntroScreen extends StatefulWidget {
 class _IntroScreenState extends State<IntroScreen>
     with SingleTickerProviderStateMixin {
   late AnimationController _controller;
-  late Animation<double> _scaleAnimation;
 
   @override
   void initState() {
@@ -26,13 +24,6 @@ class _IntroScreenState extends State<IntroScreen>
     _controller = AnimationController(
       duration: const Duration(milliseconds: 700),
       vsync: this,
-    );
-
-    _scaleAnimation = Tween<double>(begin: 1.0, end: 1.1).animate(
-      CurvedAnimation(
-        parent: _controller,
-        curve: Curves.ease,
-      ),
     );
 
     // Start the animation

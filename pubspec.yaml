@@ -55,6 +55,8 @@ dependencies:
   animated_text_kit: ^4.2.2
   animate_gradient: ^0.0.3
   firebase_messaging: ^15.0.2
+  emoji_picker_flutter: ^2.2.0
+  flutter_keyboard_visibility: ^6.0.0
  
 
 dev_dependencies:
