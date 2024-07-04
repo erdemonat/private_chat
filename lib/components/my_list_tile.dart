@@ -45,14 +45,27 @@ class _EditableListTileState extends State<EditableListTile> {
   Widget build(BuildContext context) {
     return ListTile(
       leading: Transform.translate(
-        offset: const Offset(-4, -7),
+        offset: const Offset(-4, -6),
         child: Icon(
           model.icon,
           size: 28,
+          color: Theme.of(context).colorScheme.secondary,
         ),
       ),
-      title: Text(model.title),
-      subtitle: _isEditingMode ? _subTitleTextField : Text(model.subTitle),
+      title: Text(
+        model.title,
+        style: TextStyle(
+            fontSize: 14, color: Theme.of(context).colorScheme.secondary),
+      ),
+      subtitle: _isEditingMode
+          ? _subTitleTextField
+          : Text(
+              model.subTitle,
+              style: TextStyle(
+                fontSize: 18,
+                color: Theme.of(context).colorScheme.tertiary,
+              ),
+            ),
       trailing: _isEditingMode ? _saveButton : _editButton,
       visualDensity: VisualDensity.adaptivePlatformDensity,
     );
@@ -63,6 +76,7 @@ class _EditableListTileState extends State<EditableListTile> {
       inputFormatters: [LengthLimitingTextInputFormatter(widget.maxLength)],
       controller: _subTitleEditingController,
       style: TextStyle(
+          fontSize: 18,
           color: Theme.of(context).colorScheme.tertiary.withOpacity(0.75)),
       decoration: InputDecoration(
         hintStyle: TextStyle(
@@ -74,14 +88,20 @@ class _EditableListTileState extends State<EditableListTile> {
 
   Widget get _editButton {
     return IconButton(
-      icon: const Icon(Icons.edit),
+      icon: Icon(
+        Icons.edit,
+        color: Theme.of(context).colorScheme.secondary,
+      ),
       onPressed: _toggleEditMode,
     );
   }
 
   Widget get _saveButton {
     return IconButton(
-      icon: const Icon(Icons.check),
+      icon: Icon(
+        Icons.check,
+        color: Theme.of(context).colorScheme.secondary,
+      ),
       onPressed: _saveChanges,
     );
   }

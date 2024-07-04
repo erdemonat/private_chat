@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:privatechat/components/auth_screen_logo.dart';
 import 'package:privatechat/model/custom_page_router.dart';
 import 'package:privatechat/screens/auth.dart';
 import 'package:privatechat/screens/home.dart';
@@ -61,8 +62,8 @@ class _IntroScreenState extends State<IntroScreen>
               return const AuthScreen();
             },
           ),
-          transitionType: TransitionType.slideFromBottom,
-          duration: const Duration(milliseconds: 1000)),
+          transitionType: TransitionType.fade,
+          duration: const Duration(milliseconds: 600)),
     );
   }
 
@@ -74,63 +75,44 @@ class _IntroScreenState extends State<IntroScreen>
 
   @override
   Widget build(BuildContext context) {
-    bool isLightTheme = Theme.of(context).brightness == Brightness.light;
     return Scaffold(
       body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.only(top: 220, bottom: 15),
-          child: Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    ScaleTransition(
-                      scale: _scaleAnimation,
-                      child: Image.asset(
-                        isLightTheme
-                            ? 'assets/images/logo-vector-light.png'
-                            : 'assets/images/logo-vector-dark.png',
-                        color: Theme.of(context).colorScheme.tertiary,
-                        width: 220,
-                      ),
-                    ),
-                    const SizedBox(height: 50),
-                    Text(
-                      'TapC',
-                      style: GoogleFonts.cinzel(
-                        color: Theme.of(context).colorScheme.secondary,
-                        fontSize: 46,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ],
-                ),
-                Column(
-                  children: [
-                    Text(
-                      'from',
-                      style: TextStyle(
-                          fontSize: 14,
-                          color: Theme.of(context)
-                              .colorScheme
-                              .secondary
-                              .withOpacity(0.5)),
-                    ),
-                    Text(
-                      'Meta',
-                      style: TextStyle(
-                          fontSize: 18,
-                          color: Theme.of(context)
-                              .colorScheme
-                              .secondary
-                              .withOpacity(0.8)),
-                    ),
-                  ],
-                ),
-              ],
-            ),
+        child: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  AuthIcon(),
+                  SizedBox(
+                    height: 224,
+                  )
+                ],
+              ),
+              Column(
+                children: [
+                  Text(
+                    'from',
+                    style: TextStyle(
+                        fontSize: 14,
+                        color: Theme.of(context)
+                            .colorScheme
+                            .secondary
+                            .withOpacity(0.5)),
+                  ),
+                  Text(
+                    'Xeta AI',
+                    style: TextStyle(
+                        fontSize: 18,
+                        color: Theme.of(context)
+                            .colorScheme
+                            .secondary
+                            .withOpacity(0.8)),
+                  ),
+                ],
+              ),
+            ],
           ),
         ),
       ),

@@ -1,4 +1,3 @@
-// dark mode
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -22,6 +21,20 @@ ThemeData blackTheme = ThemeData(
     cursorColor: Colors.grey.shade300,
     selectionColor: Colors.grey.shade900.withOpacity(0.4),
     selectionHandleColor: Colors.grey.shade300,
+  ),
+  snackBarTheme: SnackBarThemeData(
+    backgroundColor: Colors.grey.shade800,
+    contentTextStyle: TextStyle(
+      color: Colors.grey.shade300,
+    ),
+    shape: const RoundedRectangleBorder(
+      borderRadius: BorderRadius.only(
+        topLeft: Radius.circular(12),
+        topRight: Radius.circular(12),
+        bottomLeft: Radius.circular(12),
+        bottomRight: Radius.circular(12),
+      ),
+    ),
   ),
 );
 
@@ -47,6 +60,20 @@ ThemeData whiteTheme = ThemeData(
     selectionColor: Colors.grey.shade200.withOpacity(0.4),
     selectionHandleColor: Colors.grey.shade900,
   ),
+  snackBarTheme: SnackBarThemeData(
+    backgroundColor: Colors.grey.shade500,
+    contentTextStyle: TextStyle(
+      color: Colors.grey.shade900,
+    ),
+    shape: const RoundedRectangleBorder(
+      borderRadius: BorderRadius.only(
+        topLeft: Radius.circular(12),
+        topRight: Radius.circular(12),
+        bottomLeft: Radius.circular(12),
+        bottomRight: Radius.circular(12),
+      ),
+    ),
+  ),
 );
 
 ThemeData highContrastTheme = ThemeData(
@@ -63,6 +90,7 @@ ThemeData highContrastTheme = ThemeData(
     inversePrimary: Colors.white,
     onSurface: Colors.white,
     outlineVariant: Colors.yellow,
+    error: Colors.amber,
   ),
   iconTheme: const IconThemeData(
     color: Colors.amber,
@@ -71,5 +99,19 @@ ThemeData highContrastTheme = ThemeData(
     cursorColor: Colors.red,
     selectionColor: Colors.black45,
     selectionHandleColor: Colors.red,
+  ),
+  snackBarTheme: const SnackBarThemeData(
+    backgroundColor: Colors.amber,
+    contentTextStyle: TextStyle(
+      color: Colors.red,
+    ),
+    shape: RoundedRectangleBorder(
+      borderRadius: BorderRadius.only(
+        topLeft: Radius.circular(12),
+        topRight: Radius.circular(12),
+        bottomLeft: Radius.circular(12),
+        bottomRight: Radius.circular(12),
+      ),
+    ),
   ),
 );
