@@ -24,7 +24,7 @@ class _ChatsScreenState extends State<ChatsScreen> {
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const Center(
-            child: CircularProgressIndicator(),
+            child: LinearProgressIndicator(),
           );
         }
         if (snapshot.hasError) {

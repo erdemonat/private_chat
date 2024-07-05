@@ -53,3 +53,10 @@ TextStyle kSubTextStyle(BuildContext context) {
       fontWeight: FontWeight.w300,
       color: Theme.of(context).colorScheme.inversePrimary);
 }
+
+TextStyle kSettingsTextStyle(BuildContext context) {
+  return TextStyle(
+      fontSize: 16,
+      fontWeight: FontWeight.bold,
+      color: Theme.of(context).colorScheme.inversePrimary);
+}

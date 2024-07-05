@@ -55,14 +55,14 @@ class _EditableListTileState extends State<EditableListTile> {
       title: Text(
         model.title,
         style: TextStyle(
-            fontSize: 14, color: Theme.of(context).colorScheme.secondary),
+            fontSize: 13, color: Theme.of(context).colorScheme.secondary),
       ),
       subtitle: _isEditingMode
           ? _subTitleTextField
           : Text(
               model.subTitle,
               style: TextStyle(
-                fontSize: 18,
+                fontSize: 16,
                 color: Theme.of(context).colorScheme.tertiary,
               ),
             ),
@@ -76,7 +76,7 @@ class _EditableListTileState extends State<EditableListTile> {
       inputFormatters: [LengthLimitingTextInputFormatter(widget.maxLength)],
       controller: _subTitleEditingController,
       style: TextStyle(
-          fontSize: 18,
+          fontSize: 16,
           color: Theme.of(context).colorScheme.tertiary.withOpacity(0.75)),
       decoration: InputDecoration(
         hintStyle: TextStyle(

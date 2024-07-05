@@ -84,8 +84,8 @@ ThemeData highContrastTheme = ThemeData(
   highlightColor: Colors.black,
   colorScheme: const ColorScheme.dark(
     surface: Colors.black,
-    primary: Colors.amber,
-    secondary: Colors.blue,
+    primary: Colors.blue,
+    secondary: Colors.amber,
     tertiary: Colors.red,
     inversePrimary: Colors.white,
     onSurface: Colors.white,

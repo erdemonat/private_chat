@@ -11,6 +11,22 @@ enum AppTheme {
 }
 
 class ThemeProvider with ChangeNotifier {
+  bool _isGlassBubble = false;
+
+  bool get isGlassBubble => _isGlassBubble;
+
+  void setMessageBubbleStyle(bool isGlassBubble) {
+    _isGlassBubble = isGlassBubble;
+    notifyListeners();
+  }
+
+  void toggleBubble() {
+    _isGlassBubble = !_isGlassBubble;
+    notifyListeners();
+  }
+
+  //
+
   final IsarService isarService = IsarService();
   ThemeData _themeData = blackTheme;
   final Map<AppTheme, ThemeData> _themes = {

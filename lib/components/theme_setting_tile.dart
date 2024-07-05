@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:privatechat/components/my_dropdown_menu.dart';
+import 'package:privatechat/theme/constants.dart';
 
 class ThemeSettingTile extends StatelessWidget {
   const ThemeSettingTile({
@@ -21,10 +22,7 @@ class ThemeSettingTile extends StatelessWidget {
           children: [
             Text(
               'Theme',
-              style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                  color: Theme.of(context).colorScheme.inversePrimary),
+              style: kSettingsTextStyle(context),
             ),
             const MyPopupMenuButton(),
           ],
