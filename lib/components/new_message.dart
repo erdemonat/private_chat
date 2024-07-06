@@ -74,6 +74,13 @@ class _NewMessageState extends State<NewMessage> {
                     child: Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: TextField(
+                        onTap: () {
+                          if (_emojiShowing) {
+                            setState(() {
+                              _emojiShowing = false;
+                            });
+                          }
+                        },
                         scrollController: _scrollController,
                         focusNode: _focusNode,
                         style: TextStyle(
