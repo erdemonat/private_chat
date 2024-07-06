@@ -1,33 +1,51 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+const Color customBlueDark = Color(0xFFF6B17A);
+const Color customBlueLight = Color(0xFF910A67);
+const Color customBlueHighContrast = Color(0xFF16FF00);
+
+extension CustomColors on ThemeData {
+  Color get customColor {
+    if (colorScheme.brightness == Brightness.dark &&
+        scaffoldBackgroundColor == Colors.black) {
+      return customBlueHighContrast;
+    } else if (colorScheme.brightness == Brightness.dark) {
+      return customBlueDark;
+    } else {
+      return customBlueLight;
+    }
+  }
+}
+
 ThemeData blackTheme = ThemeData(
   textTheme: GoogleFonts.poppinsTextTheme(),
-  scaffoldBackgroundColor: Colors.grey.shade900,
-  dialogBackgroundColor: Colors.grey.shade900,
-  focusColor: Colors.grey.shade300,
-  dividerColor: Colors.grey.shade300,
-  highlightColor: Colors.grey.shade300,
-  colorScheme: ColorScheme.dark(
-    surface: Colors.grey.shade900,
-    primary: Colors.grey.shade800,
-    secondary: Colors.grey.shade500,
-    tertiary: Colors.grey.shade300,
-    inversePrimary: Colors.grey.shade300,
-    onSurface: Colors.grey.shade300,
-    outlineVariant: Colors.grey.shade700,
+  scaffoldBackgroundColor: const Color(0xFF161A30),
+  dialogBackgroundColor: const Color(0xFF161A30),
+  focusColor: const Color(0xFFF0ECE5),
+  dividerColor: const Color(0xFFF0ECE5),
+  highlightColor: const Color(0xFFF0ECE5),
+  colorScheme: const ColorScheme.dark(
+    error: customBlueDark,
+    surface: Color(0xFF161A30),
+    primary: Color(0xFF31304D),
+    secondary: Color(0xFFB6BBC4),
+    tertiary: Color(0xFFF0ECE5),
+    inversePrimary: Color(0xFFF0ECE5),
+    onSurface: Color(0xFFF0ECE5),
+    outlineVariant: Color(0xFF31304D),
   ),
   textSelectionTheme: TextSelectionThemeData(
-    cursorColor: Colors.grey.shade300,
-    selectionColor: Colors.grey.shade900.withOpacity(0.4),
-    selectionHandleColor: Colors.grey.shade300,
+    cursorColor: const Color(0xFFF0ECE5),
+    selectionColor: const Color(0xFF161A30).withOpacity(0.4),
+    selectionHandleColor: const Color(0xFFF0ECE5),
   ),
-  snackBarTheme: SnackBarThemeData(
-    backgroundColor: Colors.grey.shade800,
+  snackBarTheme: const SnackBarThemeData(
+    backgroundColor: Color(0xFF31304D),
     contentTextStyle: TextStyle(
-      color: Colors.grey.shade300,
+      color: Color(0xFFF0ECE5),
     ),
-    shape: const RoundedRectangleBorder(
+    shape: RoundedRectangleBorder(
       borderRadius: BorderRadius.only(
         topLeft: Radius.circular(12),
         topRight: Radius.circular(12),
@@ -39,33 +57,35 @@ ThemeData blackTheme = ThemeData(
 );
 
 // light mode
+
 ThemeData whiteTheme = ThemeData(
   textTheme: GoogleFonts.poppinsTextTheme(),
-  scaffoldBackgroundColor: Colors.grey.shade200,
-  dialogBackgroundColor: Colors.grey.shade300,
-  focusColor: Colors.grey.shade900,
-  dividerColor: Colors.grey.shade900,
-  highlightColor: Colors.grey.shade900,
-  colorScheme: ColorScheme.light(
-    surface: Colors.grey.shade200,
-    primary: Colors.grey.shade500,
-    secondary: Colors.grey.shade700,
-    tertiary: Colors.grey.shade900,
-    inversePrimary: Colors.grey.shade900,
-    onSurface: Colors.grey.shade900,
-    outlineVariant: Colors.grey.shade800,
+  scaffoldBackgroundColor: const Color(0xFFFDF7E4),
+  dialogBackgroundColor: const Color(0xFFFAEED1),
+  focusColor: const Color(0xFFBBAB8C),
+  dividerColor: const Color(0xFFBBAB8C),
+  highlightColor: const Color(0xFFBBAB8C),
+  colorScheme: const ColorScheme.light(
+    error: customBlueLight,
+    surface: Color(0xFFFDF7E4),
+    primary: Color(0xFFDED0B6),
+    secondary: Color(0xFFBBAB8C),
+    tertiary: Color(0xFF3E3232),
+    inversePrimary: Color(0xFF3E3232),
+    onSurface: Color(0xFF3E3232),
+    outlineVariant: Color(0xFFDED0B6),
   ),
   textSelectionTheme: TextSelectionThemeData(
-    cursorColor: Colors.grey.shade900,
-    selectionColor: Colors.grey.shade200.withOpacity(0.4),
-    selectionHandleColor: Colors.grey.shade900,
+    cursorColor: const Color(0xFFBBAB8C),
+    selectionColor: const Color(0xFFFDF7E4).withOpacity(0.4),
+    selectionHandleColor: const Color(0xFFBBAB8C),
   ),
-  snackBarTheme: SnackBarThemeData(
-    backgroundColor: Colors.grey.shade500,
+  snackBarTheme: const SnackBarThemeData(
+    backgroundColor: Color(0xFFDED0B6),
     contentTextStyle: TextStyle(
-      color: Colors.grey.shade900,
+      color: Color(0xFFBBAB8C),
     ),
-    shape: const RoundedRectangleBorder(
+    shape: RoundedRectangleBorder(
       borderRadius: BorderRadius.only(
         topLeft: Radius.circular(12),
         topRight: Radius.circular(12),
@@ -78,32 +98,33 @@ ThemeData whiteTheme = ThemeData(
 
 ThemeData highContrastTheme = ThemeData(
   textTheme: GoogleFonts.poppinsTextTheme(),
-  scaffoldBackgroundColor: Colors.black,
-  dialogBackgroundColor: Colors.black,
-  dividerColor: Colors.black,
-  highlightColor: Colors.black,
+  scaffoldBackgroundColor: const Color(0xFF000000), // #000000
+  dialogBackgroundColor: const Color(0xFF000000), // #000000
+  dividerColor: const Color(0xFFFFFFFF), // White for high contrast
+  highlightColor: const Color(0xFFFFFFFF), // White for high contrast
   colorScheme: const ColorScheme.dark(
-    surface: Colors.black,
-    primary: Colors.blue,
-    secondary: Colors.amber,
-    tertiary: Colors.red,
+    surface: Color(0xFF000000), // #000000
+    primary: Color.fromARGB(255, 7, 0, 112), // #0F6292
+    secondary: Color(0xFF16FF00), // #16FF00
+    tertiary: Color(0xFFFFED00), // #FFED00
     inversePrimary: Colors.white,
     onSurface: Colors.white,
-    outlineVariant: Colors.yellow,
-    error: Colors.amber,
+    outlineVariant: Color(0xFFFFED00), // #FFED00
+    error: Color(0xFFFF0000), // Bright red for high contrast
   ),
   iconTheme: const IconThemeData(
-    color: Colors.amber,
+    color: Color(0xFF16FF00), // #16FF00
   ),
-  textSelectionTheme: const TextSelectionThemeData(
-    cursorColor: Colors.red,
-    selectionColor: Colors.black45,
-    selectionHandleColor: Colors.red,
+  textSelectionTheme: TextSelectionThemeData(
+    cursorColor: const Color(0xFFFFED00), // #FFED00
+    selectionColor: const Color(0xFF000000)
+        .withOpacity(0.4), // #000000 with opacity for better visibility
+    selectionHandleColor: const Color(0xFFFFED00), // #FFED00
   ),
   snackBarTheme: const SnackBarThemeData(
-    backgroundColor: Colors.amber,
+    backgroundColor: Color(0xFF16FF00), // #16FF00
     contentTextStyle: TextStyle(
-      color: Colors.red,
+      color: Color(0xFF000000), // #000000 for high contrast
     ),
     shape: RoundedRectangleBorder(
       borderRadius: BorderRadius.only(

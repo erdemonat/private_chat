@@ -22,15 +22,41 @@ class ChatScreen extends StatefulWidget {
   _ChatScreenState createState() => _ChatScreenState();
 }
 
-class _ChatScreenState extends State<ChatScreen> {
+class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
   final FirebaseFirestore _db = FirebaseFirestore.instance;
   final FirebaseAuth _auth = FirebaseAuth.instance;
   String? recipientImageUrl;
   String? chatRoomId;
+  String currentUser = FirebaseAuth.instance.currentUser!.uid;
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) async {
+    if (state == AppLifecycleState.paused) {
+      await _db.collection('chats').doc(chatRoomId).update(
+        {
+          'isOnChat-$currentUser': false,
+        },
+      );
+    } else if (state == AppLifecycleState.detached) {
+      await _db.collection('chats').doc(chatRoomId).update(
+        {
+          'isOnChat-$currentUser': false,
+        },
+      );
+    } else if (state == AppLifecycleState.resumed) {
+      await _db.collection('chats').doc(chatRoomId).update(
+        {
+          'isOnChat-$currentUser': true,
+        },
+      );
+    }
+  }
 
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addObserver(this);
+
     _loadRecipientData();
     _createChatRoomAndFixStatus();
   }
@@ -125,96 +151,111 @@ class _ChatScreenState extends State<ChatScreen> {
   }
 
   @override
+  void dispose() {
+    super.dispose();
+    WidgetsBinding.instance.removeObserver(this);
+  }
+
+  @override
   Widget build(BuildContext context) {
     final firestoreProvider = Provider.of<FirestoreStreamProviders>(context);
-    return Scaffold(
-      appBar: AppBar(
-        leading: IconButton(
-            onPressed: () {
-              Navigator.pop(context);
-              _db.collection('chats').doc(chatRoomId).update(
-                {
-                  'newMessageCounter-${widget.recipientUserId}': 0,
-                  'isOnChat-${_auth.currentUser!.uid}': false
-                },
-              );
-            },
-            icon: const Icon(Icons.arrow_back)),
-        actions: [
-          Padding(
-            padding: const EdgeInsets.only(right: 20),
-            child: IconButton(
-              onPressed: () {},
-              icon: const Icon(
-                Icons.search,
-                size: 28,
-              ),
-            ),
-          )
-        ],
-        bottom: const PreferredSize(
-          preferredSize: Size.fromHeight(1),
-          child: Divider(height: 1),
-        ),
-        backgroundColor: Colors.transparent,
-        title: Row(
-          children: [
-            CircleAvatar(
-              child: recipientImageUrl != null
-                  ? CachedNetworkImage(
-                      imageUrl: recipientImageUrl!,
-                      placeholder: (context, url) =>
-                          const CircularProgressIndicator(),
-                      errorWidget: (context, url, error) =>
-                          const Icon(Icons.error),
-                      imageBuilder: (context, imageProvider) => CircleAvatar(
-                        backgroundImage: imageProvider,
-                      ),
-                    )
-                  : const CircularProgressIndicator(),
-            ),
-            const SizedBox(
-              width: 12,
-            ),
-            Flexible(
-              child: GetOnlineStatus(
-                stream: firestoreProvider.getChatRoomFields(chatRoomId),
-                recipientUserId: widget.recipientUserId,
-                recipientUsername: widget.recipientUsername,
-              ),
-            ),
-          ],
-        ),
-      ),
-      body: Container(
-        decoration: BoxDecoration(
-          gradient: LinearGradient(colors: [
-            Theme.of(context).colorScheme.primary.withOpacity(0.3),
-            Theme.of(context).colorScheme.secondary.withOpacity(0.3),
-          ], begin: Alignment.topLeft, end: Alignment.bottomRight),
-          image: DecorationImage(
-            image: const AssetImage(
-              'assets/images/chat-back-3.png',
-            ), // Buraya resim yolunu yazın
-            colorFilter: ColorFilter.mode(
-                Theme.of(context).colorScheme.surface, BlendMode.srcATop),
-
-            fit: BoxFit.cover,
-          ),
-        ),
-        child: SafeArea(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Expanded(
-                child: GetChatMessagesBuilder(
-                  stream: chatRoomId != null
-                      ? firestoreProvider.getChatMessages(chatRoomId)
-                      : const Stream.empty(),
+    return PopScope(
+      onPopInvoked: (didPop) async {
+        await _db.collection('chats').doc(chatRoomId).update(
+          {
+            'isOnChat-$currentUser': false,
+          },
+        );
+      },
+      child: Scaffold(
+        appBar: AppBar(
+          leading: IconButton(
+              onPressed: () {
+                Navigator.pop(context);
+                _db.collection('chats').doc(chatRoomId).update(
+                  {
+                    'newMessageCounter-${widget.recipientUserId}': 0,
+                    'isOnChat-${_auth.currentUser!.uid}': false
+                  },
+                );
+              },
+              icon: const Icon(Icons.arrow_back)),
+          actions: [
+            Padding(
+              padding: const EdgeInsets.only(right: 20),
+              child: IconButton(
+                onPressed: () {},
+                icon: const Icon(
+                  Icons.search,
+                  size: 28,
                 ),
               ),
-              NewMessage(onSendMessage: sendMessage),
+            )
+          ],
+          bottom: const PreferredSize(
+            preferredSize: Size.fromHeight(1),
+            child: Divider(height: 1),
+          ),
+          backgroundColor: Colors.transparent,
+          title: Row(
+            children: [
+              CircleAvatar(
+                child: recipientImageUrl != null
+                    ? CachedNetworkImage(
+                        imageUrl: recipientImageUrl!,
+                        placeholder: (context, url) =>
+                            const CircularProgressIndicator(),
+                        errorWidget: (context, url, error) =>
+                            const Icon(Icons.error),
+                        imageBuilder: (context, imageProvider) => CircleAvatar(
+                          backgroundImage: imageProvider,
+                        ),
+                      )
+                    : const CircularProgressIndicator(),
+              ),
+              const SizedBox(
+                width: 12,
+              ),
+              Flexible(
+                child: GetOnlineStatus(
+                  stream: firestoreProvider.getChatRoomFields(chatRoomId),
+                  recipientUserId: widget.recipientUserId,
+                  recipientUsername: widget.recipientUsername,
+                ),
+              ),
             ],
+          ),
+        ),
+        body: Container(
+          decoration: BoxDecoration(
+            gradient: LinearGradient(colors: [
+              Theme.of(context).colorScheme.primary.withOpacity(0.3),
+              Theme.of(context).colorScheme.secondary.withOpacity(0.3),
+            ], begin: Alignment.topLeft, end: Alignment.bottomRight),
+            image: DecorationImage(
+              image: const AssetImage(
+                'assets/images/chat-back-3.png',
+              ), // Buraya resim yolunu yazın
+              colorFilter: ColorFilter.mode(
+                  Theme.of(context).colorScheme.surface, BlendMode.srcATop),
+
+              fit: BoxFit.cover,
+            ),
+          ),
+          child: SafeArea(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Expanded(
+                  child: GetChatMessagesBuilder(
+                    stream: chatRoomId != null
+                        ? firestoreProvider.getChatMessages(chatRoomId)
+                        : const Stream.empty(),
+                  ),
+                ),
+                NewMessage(onSendMessage: sendMessage),
+              ],
+            ),
           ),
         ),
       ),

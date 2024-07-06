@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:intl/intl.dart';
 import 'package:privatechat/model/custom_page_router.dart';
 import 'package:privatechat/screens/chat.dart';
+import 'package:privatechat/theme/theme.dart';
 
 class GetLastMessageBuilder extends StatelessWidget {
   final Stream<QuerySnapshot> stream;
@@ -64,7 +65,7 @@ class GetLastMessageBuilder extends StatelessWidget {
       builder: (context, messageSnapshot) {
         if (messageSnapshot.connectionState == ConnectionState.waiting) {
           return const ListTile(
-            title: CircularProgressIndicator(),
+            title: LinearProgressIndicator(),
           );
         }
         if (messageSnapshot.hasError) {
@@ -119,21 +120,22 @@ class GetLastMessageBuilder extends StatelessWidget {
                             .colorScheme
                             .tertiary
                             .withOpacity(0.6)
-                        : Colors.green.withOpacity(0.8),
+                        : Theme.of(context).customColor,
                   ),
                 ),
 
                 /// New message counter
                 if (newMessageCounter != 0)
                   CircleAvatar(
-                    backgroundColor: Colors.green.withOpacity(0.2),
+                    backgroundColor: Theme.of(context).customColor,
                     radius: 10,
                     child: Center(
                       child: Text(
                         newMessageCounter.toString(),
                         style: TextStyle(
                           fontSize: 10,
-                          color: Theme.of(context).colorScheme.tertiary,
+                          fontWeight: FontWeight.bold,
+                          color: Theme.of(context).colorScheme.surface,
                         ),
                       ),
                     ),

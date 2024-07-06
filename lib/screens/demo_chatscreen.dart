@@ -10,16 +10,22 @@ class Demo extends StatefulWidget {
 }
 
 class _DemoState extends State<Demo> {
-  Future<QueryDocumentSnapshot<Object?>> getDocument() async {
-    // Firestore'dan belirli bir dökümanı al
-    DocumentSnapshot snapshot = await FirebaseFirestore.instance
-        .collection('demo')
-        .doc('1')
-        .collection('messages')
-        .doc('2')
-        .get();
+  Future<DocumentSnapshot<Map<String, dynamic>>?> getDocument() async {
+    try {
+      // Firestore'dan belirli bir dökümanı al
+      DocumentSnapshot<Map<String, dynamic>> demoSnapshot =
+          await FirebaseFirestore.instance
+              .collection('demo')
+              .doc('1')
+              .collection('messages')
+              .doc('2')
+              .get();
 
-    return snapshot.get('text');
+      return demoSnapshot;
+    } catch (e) {
+      print('Error fetching document: $e');
+      return null;
+    }
   }
 
   @override
@@ -43,7 +49,7 @@ class _DemoState extends State<Demo> {
           image: const AssetImage('assets/images/chat-back-3.png'),
         ),
       ),
-      child: FutureBuilder<QueryDocumentSnapshot<Object?>>(
+      child: FutureBuilder<DocumentSnapshot<Map<String, dynamic>>?>(
         future: getDocument(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {

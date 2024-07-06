@@ -117,7 +117,13 @@ class AuthForm extends StatelessWidget {
                 ),
               ),
             ),
-          if (isAuthenticating) const CircularProgressIndicator(),
+          if (isAuthenticating)
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 20),
+              child: CircularProgressIndicator(
+                color: Theme.of(context).colorScheme.tertiary,
+              ),
+            ),
           if (!isAuthenticating)
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 20),

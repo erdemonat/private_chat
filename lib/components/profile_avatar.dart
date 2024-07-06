@@ -29,6 +29,7 @@ class ProfileAvatar extends StatelessWidget {
           child: IconButton(
             onPressed: onUpdatePhoto,
             icon: const Icon(Icons.camera_alt_outlined, size: 25),
+            color: Theme.of(context).colorScheme.inversePrimary,
           ),
         )
       ],
