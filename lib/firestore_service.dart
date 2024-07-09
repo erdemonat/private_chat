@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:privatechat/model/user_data.dart';
 
 class FirestoreService {
   final _db = FirebaseFirestore.instance;
@@ -12,6 +13,12 @@ class FirestoreService {
         .orderBy("lastMessageTimestamp", descending: true)
         .snapshots()
         .map((snapshot) => snapshot.docs);
+  }
+
+  Stream<UserData> getUserStream(String userId) {
+    return _db.collection('users').doc(userId).snapshots().map((snapshot) {
+      return UserData.fromSnapshot(snapshot);
+    });
   }
 
   Stream<QuerySnapshot<Map<String, dynamic>>> getLastMessage(

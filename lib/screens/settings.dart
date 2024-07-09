@@ -1,6 +1,5 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:privatechat/screens/demo_chatscreen.dart';
 import 'package:privatechat/theme/constants.dart';
 import 'package:privatechat/components/theme_setting_tile.dart';
 import 'package:privatechat/theme/theme_provider.dart';
