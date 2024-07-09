@@ -31,4 +31,8 @@ class FirestoreService {
         .limit(1)
         .snapshots();
   }
+
+  Stream<DocumentSnapshot> getChatRoomFields(String chatRoomId) {
+    return _db.collection('chats').doc(chatRoomId).snapshots();
+  }
 }

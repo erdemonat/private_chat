@@ -181,6 +181,7 @@ class GetLastMessageBuilder extends StatelessWidget {
                   page: ChatScreen(
                     recipientUserId: recipientUserId,
                     recipientUsername: username,
+                    recipientImageUrl: imageUrl,
                   ),
                   transitionType: TransitionType.slideFromLeft,
                 ),

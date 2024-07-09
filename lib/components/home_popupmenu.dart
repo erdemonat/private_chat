@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:privatechat/model/custom_page_router.dart';
 import 'package:privatechat/screens/home.dart';
 import 'package:privatechat/screens/profile.dart';
@@ -66,6 +67,7 @@ class HomePopupButtonMenu extends StatelessWidget {
                       onPressed: () {
                         FirebaseAuth.instance.signOut();
                         Navigator.pop(context);
+                        SystemNavigator.pop();
                       },
                       child: Text(
                         'Confirm',

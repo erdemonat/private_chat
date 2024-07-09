@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:privatechat/components/delete_account_button.dart';
 import 'package:privatechat/components/profile_avatar.dart';
@@ -254,7 +255,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           .delete();
       await authenticatedUser.delete();
 
-      Navigator.pop(context);
+      SystemNavigator.pop();
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Failed delete account: $e')),

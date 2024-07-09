@@ -34,6 +34,7 @@ class ContactList extends StatelessWidget {
                     builder: (context) => ChatScreen(
                       recipientUserId: user.id,
                       recipientUsername: user['username'],
+                      recipientImageUrl: user['image_url'],
                     ),
                   ));
             },

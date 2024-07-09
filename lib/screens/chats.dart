@@ -2,9 +2,11 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:privatechat/components/chat_list_tile.dart';
 import 'package:privatechat/firestore_service.dart';
+import 'package:privatechat/model/chat_messages_data.dart';
 import 'package:privatechat/model/custom_page_router.dart';
 import 'package:privatechat/model/last_message_data.dart';
 import 'package:privatechat/model/user_data.dart';
+import 'package:privatechat/providers/stream_provider.dart';
 import 'package:privatechat/screens/chat.dart';
 import 'package:provider/provider.dart';
 
@@ -77,14 +79,14 @@ class _ChatsScreenState extends State<ChatsScreen> {
               value: FirestoreService().getLastMessage(chatRoomId).map(
                     (snapshot) => LastMessageData.fromSnapshot(snapshot),
                   ),
-              initialData: LastMessageData
-                  .initial(), // Bu metodun tanımlanması gerekiyor
+              initialData: LastMessageData.initial(),
             ),
           ],
           child: Consumer2<UserData, LastMessageData>(
             builder: (context, userData, messageData, child) {
               return ChatListTile(
-                recipientUsername: userData.username,
+                recipientUsername:
+                    currentUser != recipientUserId ? userData.username : 'You',
                 recipientImageUrl: userData.imageUrl,
                 lastMessage: messageData.messageText,
                 lastMessageTimestamp: messageData.timestamp,
@@ -94,8 +96,11 @@ class _ChatsScreenState extends State<ChatsScreen> {
                   Navigator.of(context).push(
                     CustomPageRoute(
                       page: ChatScreen(
-                          recipientUserId: recipientUserId,
-                          recipientUsername: userData.username),
+                        recipientUserId: recipientUserId,
+                        recipientUsername: userData.username,
+                        recipientImageUrl: userData.imageUrl,
+                        chatRoomId: chatDoc.id,
+                      ),
                     ),
                   );
                   updateOnlineStatusMessageCounter(chatDoc.id, recipientUserId);

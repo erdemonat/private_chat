@@ -33,7 +33,7 @@ class GetOnlineStatus extends StatelessWidget {
         var statusDoc = snapshot.data!;
         bool isOnline = statusDoc['isOnChat-$recipientUserId'] ?? false;
 
-        Provider.of<FirestoreStreamProviders>(context, listen: false)
+        Provider.of<FirestoreStreamProviders>(context, listen: true)
             .setOnlineStatus(isOnline);
 
         return Column(
