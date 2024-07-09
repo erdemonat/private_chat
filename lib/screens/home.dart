@@ -54,8 +54,11 @@ class _HomeScreenState extends State<HomeScreen> {
           padding: const EdgeInsets.only(left: 32),
           child: Text(
             'TapC',
-            style:
-                GoogleFonts.cinzel(fontWeight: FontWeight.w600, fontSize: 24),
+            style: GoogleFonts.cinzel(
+              fontWeight: FontWeight.w600,
+              fontSize: 24,
+              //color: Theme.of(context).colorScheme.tertiary,
+            ),
           ),
         ),
       ),

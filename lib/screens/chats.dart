@@ -8,6 +8,8 @@ import 'package:privatechat/model/user_data.dart';
 import 'package:privatechat/screens/chat.dart';
 import 'package:provider/provider.dart';
 
+String currentUser = FirestoreService().currentUser;
+
 class ChatsScreen extends StatefulWidget {
   const ChatsScreen({super.key});
 
@@ -19,8 +21,33 @@ class _ChatsScreenState extends State<ChatsScreen> {
   void updateOnlineStatusMessageCounter(String docId, String recipientUserId) {
     FirebaseFirestore.instance.collection('chats').doc(docId).update({
       'newMessageCounter-$recipientUserId': 0,
-      'isOnChat-${FirestoreService().currentUser}': true
+      'isOnChat-$currentUser': true
     });
+  }
+
+  void markMessageAsRead(String chatId, String id) async {
+    if (currentUser != null) {
+      QuerySnapshot messagesSnapshot = await FirebaseFirestore.instance
+          .collection('chats')
+          .doc(chatId)
+          .collection('messages')
+          .orderBy('timestamp', descending: true)
+          .get();
+
+      for (DocumentSnapshot messageSnapshot in messagesSnapshot.docs) {
+        Map<String, dynamic> messageData =
+            messageSnapshot.data() as Map<String, dynamic>;
+
+        if (messageData['senderId'] != currentUser && !messageData['isRead']) {
+          await FirebaseFirestore.instance
+              .collection('chats')
+              .doc(chatId)
+              .collection('messages')
+              .doc(messageSnapshot.id)
+              .update({'isRead': true});
+        }
+      }
+    }
   }
 
   @override
@@ -35,10 +62,10 @@ class _ChatsScreenState extends State<ChatsScreen> {
         var chatRoomId = chatDoc.id;
         var participants = chatDoc["participants"];
         var recipientUserId = participants.length == 1
-            ? FirestoreService().currentUser
+            ? currentUser
             : participants.firstWhere(
-                (id) => id != FirestoreService().currentUser,
-                orElse: () => FirestoreService().currentUser,
+                (id) => id != currentUser,
+                orElse: () => currentUser,
               );
         return MultiProvider(
           providers: [
@@ -72,6 +99,7 @@ class _ChatsScreenState extends State<ChatsScreen> {
                     ),
                   );
                   updateOnlineStatusMessageCounter(chatDoc.id, recipientUserId);
+                  markMessageAsRead(chatDoc.id, messageData.messageText);
                 },
               );
             },

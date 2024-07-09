@@ -80,7 +80,7 @@ class ChatListTile extends StatelessWidget {
           lastMessage,
           style: TextStyle(
             fontSize: 13,
-            color: Theme.of(context).colorScheme.onSurface,
+            color: Theme.of(context).colorScheme.inversePrimary,
           ),
           overflow: TextOverflow.ellipsis,
           maxLines: 1,
@@ -89,7 +89,11 @@ class ChatListTile extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           crossAxisAlignment: CrossAxisAlignment.end,
           children: [
-            Text(formatTimestamp(lastMessageTimestamp)),
+            Text(
+              formatTimestamp(lastMessageTimestamp),
+              style: TextStyle(
+                  color: Theme.of(context).colorScheme.inversePrimary),
+            ),
             if (newMessageCounter != 0)
               CircleAvatar(
                 backgroundColor: Theme.of(context).customColor,
@@ -103,6 +107,12 @@ class ChatListTile extends StatelessWidget {
                   ),
                 ),
               ),
+            if (newMessageCounter == 0)
+              const CircleAvatar(
+                backgroundColor: Colors.transparent,
+                radius: 10,
+                child: Text(''),
+              )
           ],
         ),
       ),
