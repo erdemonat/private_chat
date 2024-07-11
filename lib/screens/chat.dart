@@ -3,8 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:intl/intl.dart';
 import 'package:privatechat/components/message_bubble.dart';
-import 'package:privatechat/custom_streams/get_chat_messages_builder.dart';
-import 'package:privatechat/providers/stream_provider.dart';
+import 'package:privatechat/model/chat_messages_data.dart';
 import 'package:privatechat/components/new_message.dart';
 import 'package:privatechat/theme/constants.dart';
 import 'package:provider/provider.dart';
@@ -24,15 +23,16 @@ class ChatScreen extends StatefulWidget {
   });
 
   @override
-  _ChatScreenState createState() => _ChatScreenState();
+  ChatScreenState createState() => ChatScreenState();
 }
 
-class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
+class ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
   final FirebaseFirestore _db = FirebaseFirestore.instance;
   final FirebaseAuth _auth = FirebaseAuth.instance;
   String? recipientImageUrl;
   String? chatRoomId;
   String currentUser = FirebaseAuth.instance.currentUser!.uid;
+  bool isRecipientOnline = false;
 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) async {
@@ -87,6 +87,14 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
       setState(() {
         recipientImageUrl = recipientUserDoc['image_url'];
       });
+
+      _db.collection('chats').doc(chatRoomId).snapshots().listen((chatDoc) {
+        if (chatDoc.exists) {
+          setState(() {
+            isRecipientOnline = chatDoc['isOnChat-${widget.recipientUserId}'];
+          });
+        }
+      });
     }
   }
 
@@ -132,7 +140,7 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
         'text': messageText,
         'senderId': _auth.currentUser!.uid,
         'timestamp': FieldValue.serverTimestamp(),
-        'isRead': false ? true : false,
+        'isRead': isRecipientOnline ? true : false,
       };
 
       await _db
@@ -160,8 +168,6 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
 
   @override
   Widget build(BuildContext context) {
-    final firestoreProvider = Provider.of<FirestoreStreamProviders>(context);
-
     return PopScope(
       onPopInvoked: (didPop) async {
         await _db.collection('chats').doc(chatRoomId).update(
@@ -226,7 +232,7 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
                         : widget.recipientUsername),
                     style: kAppbarTitle,
                   ),
-                  if (true)
+                  if (isRecipientOnline)
                     const Text(
                       'online',
                       style: TextStyle(fontSize: 14),
@@ -256,61 +262,45 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Expanded(
-                    child: StreamBuilder<QuerySnapshot>(
-                  stream: Provider.of<FirestoreStreamProviders>(context)
-                      .getChatMessages(chatRoomId),
-                  builder: (context, snapshot) {
-                    if (snapshot.connectionState == ConnectionState.waiting) {
-                      return const ListTile(
-                        title: LinearProgressIndicator(),
+                MultiProvider(
+                  providers: [
+                    StreamProvider<List<ChatMessage>>.value(
+                      value: ChatMessageData().getChatMessages(chatRoomId!),
+                      initialData: ChatMessageData.initial(),
+                    ),
+                  ],
+                  child: Consumer<List<ChatMessage>>(
+                    builder: (context, messages, child) {
+                      return Expanded(
+                        child: ListView.builder(
+                          reverse: true,
+                          itemCount: messages.length,
+                          itemBuilder: (context, index) {
+                            var message = messages[index];
+                            var timestamp = message.timestamp;
+                            var timeString = '';
+
+                            var dateTime = timestamp.toDate();
+                            timeString = DateFormat('HH:mm').format(dateTime);
+
+                            var senderId = message.senderId;
+                            bool sentByMe = ChatMessageData()
+                                .isMessageFromCurrentUser(
+                                    senderId, currentUser);
+
+                            return MessageBubble(
+                              sentByMe: sentByMe,
+                              message: message.text,
+                              timeString: timeString,
+                              checkColor:
+                                  message.isRead ? Colors.blue : Colors.grey,
+                            );
+                          },
+                        ),
                       );
-                    }
-                    if (snapshot.hasError) {
-                      return ListTile(
-                        title: Text('Error: ${snapshot.error}'),
-                      );
-                    }
-                    if (!snapshot.hasData) {
-                      return const Center(
-                        child: Text('data'),
-                      );
-                    }
-
-                    var messages = snapshot.data!.docs;
-
-                    bool isMe(String senderId) {
-                      return _auth.currentUser != null &&
-                          senderId == _auth.currentUser!.uid;
-                    }
-
-                    return ListView.builder(
-                      reverse: true,
-                      itemCount: messages.length,
-                      itemBuilder: (context, index) {
-                        var message = messages[index];
-                        var timestamp = message['timestamp'];
-                        var timeString = '';
-
-                        if (timestamp != null) {
-                          var dateTime = timestamp.toDate();
-                          timeString = DateFormat('HH:mm').format(dateTime);
-                        }
-
-                        var senderId = message['senderId'];
-                        bool sentByMe = isMe(senderId);
-
-                        return MessageBubble(
-                          sentByMe: sentByMe,
-                          message: message,
-                          timeString: timeString,
-                          checkColor:
-                              message['isRead'] ? Colors.blue : Colors.grey,
-                        );
-                      },
-                    );
-                  },
-                )),
+                    },
+                  ),
+                ),
                 NewMessage(onSendMessage: sendMessage),
               ],
             ),

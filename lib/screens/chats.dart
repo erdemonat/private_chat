@@ -1,12 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:privatechat/components/chat_list_tile.dart';
-import 'package:privatechat/firestore_service.dart';
-import 'package:privatechat/model/chat_messages_data.dart';
+import 'package:privatechat/providers/firestore_service.dart';
 import 'package:privatechat/model/custom_page_router.dart';
 import 'package:privatechat/model/last_message_data.dart';
 import 'package:privatechat/model/user_data.dart';
-import 'package:privatechat/providers/stream_provider.dart';
 import 'package:privatechat/screens/chat.dart';
 import 'package:provider/provider.dart';
 
@@ -28,26 +26,24 @@ class _ChatsScreenState extends State<ChatsScreen> {
   }
 
   void markMessageAsRead(String chatId, String id) async {
-    if (currentUser != null) {
-      QuerySnapshot messagesSnapshot = await FirebaseFirestore.instance
-          .collection('chats')
-          .doc(chatId)
-          .collection('messages')
-          .orderBy('timestamp', descending: true)
-          .get();
+    QuerySnapshot messagesSnapshot = await FirebaseFirestore.instance
+        .collection('chats')
+        .doc(chatId)
+        .collection('messages')
+        .orderBy('timestamp', descending: true)
+        .get();
 
-      for (DocumentSnapshot messageSnapshot in messagesSnapshot.docs) {
-        Map<String, dynamic> messageData =
-            messageSnapshot.data() as Map<String, dynamic>;
+    for (DocumentSnapshot messageSnapshot in messagesSnapshot.docs) {
+      Map<String, dynamic> messageData =
+          messageSnapshot.data() as Map<String, dynamic>;
 
-        if (messageData['senderId'] != currentUser && !messageData['isRead']) {
-          await FirebaseFirestore.instance
-              .collection('chats')
-              .doc(chatId)
-              .collection('messages')
-              .doc(messageSnapshot.id)
-              .update({'isRead': true});
-        }
+      if (messageData['senderId'] != currentUser && !messageData['isRead']) {
+        await FirebaseFirestore.instance
+            .collection('chats')
+            .doc(chatId)
+            .collection('messages')
+            .doc(messageSnapshot.id)
+            .update({'isRead': true});
       }
     }
   }

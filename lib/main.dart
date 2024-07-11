@@ -2,8 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:privatechat/firestore_service.dart';
-import 'package:privatechat/providers/stream_provider.dart';
+import 'package:privatechat/providers/firestore_service.dart';
 import 'package:privatechat/screens/intro.dart';
 import 'package:privatechat/theme/theme_provider.dart';
 import 'package:provider/provider.dart';
@@ -27,9 +26,6 @@ void main() async {
       providers: [
         ChangeNotifierProvider(
           create: (context) => ThemeProvider(),
-        ),
-        ChangeNotifierProvider(
-          create: (context) => FirestoreStreamProviders(),
         ),
         StreamProvider<List<DocumentSnapshot>>(
           create: (context) => FirestoreService().getChatsStream(),

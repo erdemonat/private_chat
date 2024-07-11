@@ -1,6 +1,5 @@
 import 'dart:ui';
 
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:privatechat/theme/theme_provider.dart';
 import 'package:provider/provider.dart';
@@ -15,7 +14,7 @@ class MessageBubble extends StatelessWidget {
   });
 
   final bool sentByMe;
-  final QueryDocumentSnapshot<Object?> message;
+  final String message;
   final String timeString;
   final Color checkColor;
 
@@ -99,7 +98,7 @@ class MessageBubble extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.end,
                       children: [
                         Text(
-                          message['text'],
+                          message,
                           style: TextStyle(
                               color: Theme.of(context).colorScheme.onSurface),
                         ),
@@ -189,7 +188,7 @@ class MessageBubble extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
                   Text(
-                    message['text'],
+                    message,
                     style: TextStyle(
                         color: Theme.of(context).colorScheme.onSurface),
                   ),
