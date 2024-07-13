@@ -5,6 +5,8 @@ import 'package:intl/intl.dart';
 import 'package:privatechat/components/message_bubble.dart';
 import 'package:privatechat/model/chat_messages_data.dart';
 import 'package:privatechat/components/new_message.dart';
+import 'package:privatechat/providers/chat_room_state.dart';
+import 'package:privatechat/providers/firestore_service.dart';
 import 'package:privatechat/theme/constants.dart';
 import 'package:provider/provider.dart';
 
@@ -87,14 +89,6 @@ class ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
       setState(() {
         recipientImageUrl = recipientUserDoc['image_url'];
       });
-
-      _db.collection('chats').doc(chatRoomId).snapshots().listen((chatDoc) {
-        if (chatDoc.exists) {
-          setState(() {
-            isRecipientOnline = chatDoc['isOnChat-${widget.recipientUserId}'];
-          });
-        }
-      });
     }
   }
 
@@ -140,7 +134,9 @@ class ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
         'text': messageText,
         'senderId': _auth.currentUser!.uid,
         'timestamp': FieldValue.serverTimestamp(),
-        'isRead': isRecipientOnline ? true : false,
+        'isRead': Provider.of<ChatRoomState>(context, listen: false).isOnline
+            ? true
+            : false,
       };
 
       await _db
@@ -223,21 +219,42 @@ class ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
               const SizedBox(
                 width: 12,
               ),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    (widget.recipientUserId == currentUser
-                        ? 'You'
-                        : widget.recipientUsername),
-                    style: kAppbarTitle,
-                  ),
-                  if (isRecipientOnline)
-                    const Text(
-                      'online',
-                      style: TextStyle(fontSize: 14),
+              SafeArea(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      (widget.recipientUserId == currentUser
+                          ? 'You'
+                          : widget.recipientUsername),
+                      style: kAppbarTitle,
+                    ),
+                    StreamProvider<Map<String, dynamic>>.value(
+                      value: FirestoreService().getChatRoomFields(chatRoomId!),
+                      initialData: const {},
+                      child: Consumer<Map<String, dynamic>>(
+                          builder: (context, value, child) {
+                        Provider.of<ChatRoomState>(context, listen: false)
+                                .isOnline =
+                            value['isOnChat-${widget.recipientUserId}'] ??
+                                false;
+
+                        if (Provider.of<ChatRoomState>(context, listen: false)
+                            .isOnline) {
+                          return const Text(
+                            'online',
+                            style: TextStyle(fontSize: 14),
+                          );
+                        } else {
+                          return const Text(
+                            '',
+                            style: TextStyle(fontSize: 0),
+                          );
+                        }
+                      }),
                     )
-                ],
+                  ],
+                ),
               ),
             ],
           ),
@@ -262,13 +279,9 @@ class ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                MultiProvider(
-                  providers: [
-                    StreamProvider<List<ChatMessage>>.value(
-                      value: ChatMessageData().getChatMessages(chatRoomId!),
-                      initialData: ChatMessageData.initial(),
-                    ),
-                  ],
+                StreamProvider<List<ChatMessage>>(
+                  create: (_) => ChatMessageData().getChatMessages(chatRoomId!),
+                  initialData: ChatMessageData.initial(),
                   child: Consumer<List<ChatMessage>>(
                     builder: (context, messages, child) {
                       return Expanded(

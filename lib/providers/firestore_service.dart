@@ -32,7 +32,11 @@ class FirestoreService {
         .snapshots();
   }
 
-  Stream<DocumentSnapshot> getChatRoomFields(String chatRoomId) {
-    return _db.collection('chats').doc(chatRoomId).snapshots();
+  Stream<Map<String, dynamic>> getChatRoomFields(String chatRoomId) {
+    return FirebaseFirestore.instance
+        .collection('chats')
+        .doc(chatRoomId)
+        .snapshots()
+        .map((snapshot) => snapshot.data()!);
   }
 }
