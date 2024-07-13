@@ -34,7 +34,6 @@ class ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
   String? recipientImageUrl;
   String? chatRoomId;
   String currentUser = FirebaseAuth.instance.currentUser!.uid;
-  bool isRecipientOnline = false;
 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) async {
@@ -206,14 +205,12 @@ class ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
             children: [
               ClipOval(
                 child: CircleAvatar(
-                  child: recipientImageUrl != null
-                      ? Image.network(
-                          widget.recipientImageUrl,
-                          width: 48,
-                          height: 48,
-                          fit: BoxFit.cover,
-                        )
-                      : const CircularProgressIndicator(),
+                  child: Image.network(
+                    widget.recipientImageUrl,
+                    width: 48,
+                    height: 48,
+                    fit: BoxFit.cover,
+                  ),
                 ),
               ),
               const SizedBox(
@@ -280,6 +277,7 @@ class ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 StreamProvider<List<ChatMessage>>(
+                  lazy: true,
                   create: (_) => ChatMessageData().getChatMessages(chatRoomId!),
                   initialData: ChatMessageData.initial(),
                   child: Consumer<List<ChatMessage>>(
