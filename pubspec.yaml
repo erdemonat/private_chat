@@ -50,7 +50,7 @@ dependencies:
   image_cropper: ^7.0.5
   dropdown_button2: ^2.3.9
   google_fonts: ^6.2.1
-  firebase_messaging: ^15.0.2
+  firebase_messaging: ^15.0.3
   emoji_picker_flutter: ^2.2.0
   flutter_keyboard_visibility: ^6.0.0
 

@@ -109,6 +109,8 @@ class ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
       'participants': [userId1, userId2],
       'isOnChat-$userId1': true,
       'isOnChat-$userId2': false,
+      'newMessageCounter-$userId1': 0,
+      'newMessageCounter-$userId2': 0,
     };
 
     await _db

@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:privatechat/firebase_api.dart';
 import 'package:privatechat/providers/chat_room_state.dart';
 import 'package:privatechat/providers/firestore_service.dart';
 import 'package:privatechat/screens/intro.dart';
@@ -14,6 +15,7 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+  await FirebaseApi().initNotification();
   FirebaseFirestore.instance.settings = const Settings(
     cacheSizeBytes: Settings.CACHE_SIZE_UNLIMITED,
     persistenceEnabled: true,
