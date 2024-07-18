@@ -10,16 +10,8 @@ class FirebaseApi {
   final fm = FirebaseMessaging.instance;
 
   Future<void> initNotification() async {
-    await fm.requestPermission();
+    // await fm.requestPermission();
     final fcmtoken = await fm.getToken();
-    // FirebaseMessaging.instance.onTokenRefresh.listen((fcmToken) {
-    //   // TODO: If necessary send token to application server.
-
-    //   // Note: This callback is fired at each app startup and whenever a new
-    //   // token is generated.
-    // }).onError((err) {
-    //   // Error getting token.
-    // });
     fm.subscribeToTopic('messages');
     print('sektir: $fcmtoken');
     FirebaseMessaging.onBackgroundMessage(handleBackgroundMessage);

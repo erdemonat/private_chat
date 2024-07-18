@@ -88,6 +88,7 @@ class _AuthScreenState extends State<AuthScreen> {
                 : _enteredEmail.split('@')[0],
             'image_url': imageURL,
             'status': 'Hello I am using PrivateChat',
+            'token': '',
           });
         } else {
           throw Exception('Default profile picture file not found.');

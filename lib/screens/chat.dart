@@ -134,6 +134,7 @@ class ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
       var messageData = {
         'text': messageText,
         'senderId': _auth.currentUser!.uid,
+        'receiverId': widget.recipientUserId,
         'timestamp': FieldValue.serverTimestamp(),
         'isRead': Provider.of<ChatRoomState>(context, listen: false).isOnline
             ? true
