@@ -1,7 +1,7 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:permission_handler/permission_handler.dart';
 import 'package:privatechat/components/bottom_nav_bar.dart';
 import 'package:privatechat/components/home_popupmenu.dart';
 import 'package:privatechat/screens/chats.dart';
@@ -19,7 +19,6 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   final PageController _pageController = PageController();
   int selectedIndex = 0;
-  final FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
 
   final List<Widget> _pages = [
     ChatsScreen(),
@@ -34,6 +33,15 @@ class _HomeScreenState extends State<HomeScreen> {
         duration: const Duration(milliseconds: 200), curve: Curves.easeInOut);
   }
 
+  void updateToken() async {
+    var fcmtoken = await FirebaseMessaging.instance.getToken();
+    FirebaseFirestore.instance.collection('users').doc(currentUser).update(
+      {
+        'token': '$fcmtoken',
+      },
+    );
+  }
+
   @override
   void dispose() {
     _pageController.dispose();
@@ -43,12 +51,7 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     super.initState();
-    _firebaseMessaging.requestPermission();
-    _firebaseMessaging.setForegroundNotificationPresentationOptions(
-      alert: true,
-      badge: true,
-      sound: true,
-    );
+    updateToken();
   }
 
   @override

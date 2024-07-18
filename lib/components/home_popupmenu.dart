@@ -1,7 +1,9 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:privatechat/model/custom_page_router.dart';
+import 'package:privatechat/screens/chats.dart';
 import 'package:privatechat/screens/home.dart';
 import 'package:privatechat/screens/profile.dart';
 import 'package:privatechat/screens/settings.dart';
@@ -64,7 +66,11 @@ class HomePopupButtonMenu extends StatelessWidget {
                       ),
                     ),
                     TextButton(
-                      onPressed: () {
+                      onPressed: () async {
+                        await FirebaseFirestore.instance
+                            .collection('users')
+                            .doc(currentUser)
+                            .update({'token': ''});
                         FirebaseAuth.instance.signOut();
                         Navigator.pop(context);
                         SystemNavigator.pop();

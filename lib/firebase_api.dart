@@ -7,13 +7,17 @@ Future<void> handleBackgroundMessage(RemoteMessage message) async {
 }
 
 class FirebaseApi {
-  final fm = FirebaseMessaging.instance;
-
   Future<void> initNotification() async {
-    // await fm.requestPermission();
-    final fcmtoken = await fm.getToken();
-    fm.subscribeToTopic('messages');
-    print('sektir: $fcmtoken');
+    FirebaseMessaging.instance.subscribeToTopic('messages');
     FirebaseMessaging.onBackgroundMessage(handleBackgroundMessage);
+    FirebaseMessaging.instance.requestPermission(
+      alert: true,
+      announcement: false,
+      badge: true,
+      carPlay: false,
+      criticalAlert: false,
+      provisional: false,
+      sound: true,
+    );
   }
 }
