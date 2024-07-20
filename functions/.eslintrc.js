@@ -4,7 +4,7 @@ module.exports = {
     node: true,
   },
   parserOptions: {
-    "ecmaVersion": 2018,
+    ecmaVersion: 2018,
   },
   extends: [
     "eslint:recommended",
@@ -16,6 +16,7 @@ module.exports = {
     "quotes": ["error", "double", {"allowTemplateLiterals": true}],
     "indent": ["error", 2],
     "comma-dangle": ["error", "always-multiline"],
+    "max-len": ["error", {"code": 122}],
   },
   overrides: [
     {

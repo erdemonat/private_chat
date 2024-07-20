@@ -1,10 +1,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:privatechat/firebase_api.dart';
 import 'package:privatechat/providers/chat_room_state.dart';
 import 'package:privatechat/providers/firestore_service.dart';
+import 'package:privatechat/screens/home.dart';
 import 'package:privatechat/screens/intro.dart';
 import 'package:privatechat/theme/theme_provider.dart';
 import 'package:provider/provider.dart';
@@ -55,7 +57,22 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: Provider.of<ThemeProvider>(context).themeData,
-      home: const IntroScreen(),
+      home: StreamBuilder(
+        stream: FirebaseAuth.instance.authStateChanges(),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Scaffold(
+              body: Center(
+                child: CircularProgressIndicator(),
+              ),
+            );
+          }
+          if (snapshot.hasData) {
+            return const HomeScreen();
+          }
+          return const IntroScreen();
+        },
+      ),
     );
   }
 }

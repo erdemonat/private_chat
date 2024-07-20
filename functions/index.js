@@ -12,7 +12,6 @@ exports.sendNotification = onDocumentCreated(
     const receiverId = message.receiverId;
     const chatId = context.params.chatId;
 
-    // Sohbet belgesini alın
     const chatRef = admin.firestore().collection("chats").doc(chatId);
     const chatDoc = await chatRef.get();
 
@@ -24,13 +23,11 @@ exports.sendNotification = onDocumentCreated(
     const chat = chatDoc.data();
     const participants = chat.participants;
 
-    // Kullanıcının UID'sini kontrol edin
     if (!participants.includes(senderId)) {
       console.log("User is not in chat participants.");
       return null;
     }
 
-    // Bildirimi gönder
     const senderRef = admin.firestore().collection("users").doc(senderId);
     const senderDoc = await senderRef.get();
 
@@ -42,7 +39,6 @@ exports.sendNotification = onDocumentCreated(
     const senderUser = senderDoc.data();
     const senderUsername = senderUser.username;
 
-    // Alıcının cihaz token'ını alın
     const receiverRef = admin.firestore().collection("users").doc(receiverId);
     const receiverDoc = await receiverRef.get();
 

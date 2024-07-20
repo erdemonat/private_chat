@@ -34,28 +34,29 @@ class _IntroScreenState extends State<IntroScreen>
   }
 
   _navigateToHome() async {
-    await Future.delayed(const Duration(milliseconds: 1400), () {});
+    await Future.delayed(const Duration(milliseconds: 800), () {});
     Navigator.pushReplacement(
       context,
       CustomPageRoute(
-          page: StreamBuilder(
-            stream: FirebaseAuth.instance.authStateChanges(),
-            builder: (context, snapshot) {
-              if (snapshot.connectionState == ConnectionState.waiting) {
-                return const Scaffold(
-                  body: Center(
-                    child: CircularProgressIndicator(),
-                  ),
-                );
-              }
-              if (snapshot.hasData) {
-                return const HomeScreen();
-              }
-              return const AuthScreen();
-            },
-          ),
-          transitionType: TransitionType.fade,
-          duration: const Duration(milliseconds: 600)),
+        page: StreamBuilder(
+          stream: FirebaseAuth.instance.authStateChanges(),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return const Scaffold(
+                body: Center(
+                  child: CircularProgressIndicator(),
+                ),
+              );
+            }
+            if (snapshot.hasData) {
+              return const HomeScreen();
+            }
+            return const AuthScreen();
+          },
+        ),
+        transitionType: TransitionType.fade,
+        duration: const Duration(milliseconds: 600),
+      ),
     );
   }
 

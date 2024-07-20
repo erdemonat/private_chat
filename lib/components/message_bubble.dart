@@ -60,6 +60,7 @@ class MessageBubble extends StatelessWidget {
                     ? Text(
                         timeString,
                         style: TextStyle(
+                            fontSize: 12,
                             color: Theme.of(context)
                                 .colorScheme
                                 .onSurface
@@ -72,6 +73,7 @@ class MessageBubble extends StatelessWidget {
                           Text(
                             timeString,
                             style: TextStyle(
+                                fontSize: 12,
                                 color: Theme.of(context)
                                     .colorScheme
                                     .onSurface
