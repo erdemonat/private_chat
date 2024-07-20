@@ -74,7 +74,7 @@ class _HomeScreenState extends State<HomeScreen> {
             style: GoogleFonts.cinzel(
               fontWeight: FontWeight.w600,
               fontSize: 24,
-              //color: Theme.of(context).colorScheme.tertiary,
+              color: Theme.of(context).colorScheme.secondary,
             ),
           ),
         ),

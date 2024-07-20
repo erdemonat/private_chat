@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:privatechat/components/auth_screen_logo.dart';
 import 'package:privatechat/model/custom_page_router.dart';
 import 'package:privatechat/screens/auth.dart';
@@ -93,9 +94,10 @@ class _IntroScreenState extends State<IntroScreen>
                             .withOpacity(0.5)),
                   ),
                   Text(
-                    'Xeta AI',
-                    style: TextStyle(
-                        fontSize: 18,
+                    'D&O',
+                    style: GoogleFonts.lora(
+                        fontWeight: FontWeight.w600,
+                        fontSize: 28,
                         color: Theme.of(context)
                             .colorScheme
                             .secondary

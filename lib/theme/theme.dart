@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-const Color customBlueDark = Color(0xFFF6B17A);
-const Color customBlueLight = Color(0xFF910A67);
+const Color customBlueDark = Color.fromARGB(255, 238, 194, 147);
+const Color customBlueLight = Color.fromARGB(255, 145, 10, 17);
 const Color customBlueHighContrast = Color(0xFF16FF00);
 
 extension CustomColors on ThemeData {
@@ -18,22 +18,22 @@ extension CustomColors on ThemeData {
   }
 }
 
-ThemeData blackTheme = ThemeData(
+ThemeData darkTheme = ThemeData(
   textTheme: GoogleFonts.poppinsTextTheme(),
-  scaffoldBackgroundColor: const Color(0xFF161A30),
-  dialogBackgroundColor: const Color(0xFF161A30),
+  scaffoldBackgroundColor: const Color.fromARGB(255, 18, 25, 33),
+  dialogBackgroundColor: const Color.fromARGB(255, 18, 25, 33),
   focusColor: const Color(0xFFF0ECE5),
   dividerColor: const Color(0xFFF0ECE5),
   highlightColor: const Color(0xFFF0ECE5),
   colorScheme: const ColorScheme.dark(
     error: customBlueDark,
-    surface: Color(0xFF161A30),
-    primary: Color(0xFF31304D),
-    secondary: Color(0xFFB6BBC4),
+    surface: Color.fromARGB(255, 18, 25, 33),
+    primary: Color.fromARGB(255, 38, 53, 71),
+    secondary: Color.fromARGB(255, 158, 179, 203),
     tertiary: Color(0xFFF0ECE5),
-    inversePrimary: Color.fromARGB(255, 214, 219, 226),
+    inversePrimary: Color(0xFFF0ECE5),
     onSurface: Color(0xFFF0ECE5),
-    outlineVariant: Color(0xFF31304D),
+    outlineVariant: Color.fromARGB(255, 27, 35, 46),
   ),
   textSelectionTheme: TextSelectionThemeData(
     cursorColor: const Color(0xFFF0ECE5),
@@ -56,34 +56,32 @@ ThemeData blackTheme = ThemeData(
   ),
 );
 
-// light mode
-
-ThemeData whiteTheme = ThemeData(
+ThemeData lightTheme = ThemeData(
   textTheme: GoogleFonts.poppinsTextTheme(),
-  scaffoldBackgroundColor: const Color(0xFFFDF7E4),
-  dialogBackgroundColor: const Color(0xFFFAEED1),
-  focusColor: const Color(0xFFBBAB8C),
-  dividerColor: const Color(0xFFBBAB8C),
-  highlightColor: const Color(0xFFBBAB8C),
+  scaffoldBackgroundColor: Colors.white,
+  dialogBackgroundColor: Colors.white,
+  focusColor: const Color(0xFF1B1F32),
+  dividerColor: const Color(0xFF1B1F32),
+  highlightColor: const Color(0xFF1B1F32),
   colorScheme: const ColorScheme.light(
     error: customBlueLight,
-    surface: Color(0xFFFDF7E4),
-    primary: Color(0xFFDED0B6),
-    secondary: Color(0xFFBBAB8C),
-    tertiary: Color(0xFF3E3232),
-    inversePrimary: Color.fromARGB(255, 94, 74, 74),
-    onSurface: Color(0xFF3E3232),
-    outlineVariant: Color(0xFFDED0B6),
+    surface: Colors.white,
+    primary: Color.fromARGB(255, 199, 209, 218),
+    secondary: Color.fromARGB(255, 70, 83, 99),
+    tertiary: Color(0xFF1B1F32),
+    inversePrimary: Color(0xFF1B1F32),
+    onSurface: Color(0xFF1B1F32),
+    outlineVariant: Color.fromARGB(255, 237, 242, 247),
   ),
   textSelectionTheme: TextSelectionThemeData(
-    cursorColor: const Color(0xFFBBAB8C),
-    selectionColor: const Color(0xFFFDF7E4).withOpacity(0.4),
-    selectionHandleColor: const Color(0xFFBBAB8C),
+    cursorColor: const Color(0xFF1B1F32),
+    selectionColor: const Color(0xFF1B1F32).withOpacity(0.4),
+    selectionHandleColor: const Color(0xFF1B1F32),
   ),
   snackBarTheme: const SnackBarThemeData(
-    backgroundColor: Color(0xFFDED0B6),
+    backgroundColor: Color(0xFFF0ECE5),
     contentTextStyle: TextStyle(
-      color: Color(0xFFBBAB8C),
+      color: Color(0xFF1B1F32),
     ),
     shape: RoundedRectangleBorder(
       borderRadius: BorderRadius.only(
@@ -98,33 +96,32 @@ ThemeData whiteTheme = ThemeData(
 
 ThemeData highContrastTheme = ThemeData(
   textTheme: GoogleFonts.poppinsTextTheme(),
-  scaffoldBackgroundColor: const Color(0xFF000000), // #000000
-  dialogBackgroundColor: const Color(0xFF000000), // #000000
-  dividerColor: const Color(0xFFFFFFFF), // White for high contrast
-  highlightColor: const Color(0xFFFFFFFF), // White for high contrast
+  scaffoldBackgroundColor: const Color(0xFF000000),
+  dialogBackgroundColor: const Color(0xFF000000),
+  dividerColor: const Color(0xFFFFFFFF),
+  highlightColor: const Color(0xFFFFFFFF),
   colorScheme: const ColorScheme.dark(
-    surface: Color(0xFF000000), // #000000
-    primary: Color.fromARGB(255, 7, 0, 112), // #0F6292
-    secondary: Color(0xFF16FF00), // #16FF00
-    tertiary: Color(0xFFFFED00), // #FFED00
+    surface: Color(0xFF000000),
+    primary: Color.fromARGB(255, 7, 0, 112),
+    secondary: Color(0xFF16FF00),
+    tertiary: Color(0xFFFFED00),
     inversePrimary: Colors.white,
     onSurface: Colors.white,
-    outlineVariant: Color(0xFFFFED00), // #FFED00
-    error: Color(0xFFFF0000), // Bright red for high contrast
+    outlineVariant: Color(0xFFFFED00),
+    error: Color(0xFFFF0000),
   ),
   iconTheme: const IconThemeData(
-    color: Color(0xFF16FF00), // #16FF00
+    color: Color(0xFF16FF00),
   ),
   textSelectionTheme: TextSelectionThemeData(
-    cursorColor: const Color(0xFFFFED00), // #FFED00
-    selectionColor: const Color(0xFF000000)
-        .withOpacity(0.4), // #000000 with opacity for better visibility
-    selectionHandleColor: const Color(0xFFFFED00), // #FFED00
+    cursorColor: const Color(0xFFFFED00),
+    selectionColor: const Color(0xFF000000).withOpacity(0.4),
+    selectionHandleColor: const Color(0xFFFFED00),
   ),
   snackBarTheme: const SnackBarThemeData(
-    backgroundColor: Color(0xFF16FF00), // #16FF00
+    backgroundColor: Color(0xFF16FF00),
     contentTextStyle: TextStyle(
-      color: Color(0xFF000000), // #000000 for high contrast
+      color: Color(0xFF000000),
     ),
     shape: RoundedRectangleBorder(
       borderRadius: BorderRadius.only(

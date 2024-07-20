@@ -14,7 +14,7 @@ class AuthIcon extends StatelessWidget {
             isLightTheme
                 ? 'assets/images/logo-vector-light.png'
                 : 'assets/images/logo-vector-dark.png',
-            color: Theme.of(context).colorScheme.tertiary,
+            color: Theme.of(context).colorScheme.secondary,
             width: MediaQuery.of(context).size.width * 0.6,
             fit: BoxFit.contain,
           ),

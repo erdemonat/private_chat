@@ -57,7 +57,14 @@ class _ContactsScreenState extends State<ContactsScreen> {
           if (filteredUserDocs.any((doc) =>
               doc['username'].toString().toLowerCase() !=
               searchController.text.toLowerCase())) {
-            return const NoContactsFound();
+            return const NoContactsFound(
+              title: 'No Match Username',
+              subtitle: '',
+              // richTextChildren: [
+              //   TextSpan(text: 'type the username,'),
+              //   TextSpan(text: 'and let the chat begin!'),
+              // ],
+            );
           } else {
             return ContactList(filteredUserDocs: filteredUserDocs);
           }

@@ -16,6 +16,7 @@ class HomePopupButtonMenu extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return PopupMenuButton(
+      iconColor: Theme.of(context).colorScheme.secondary,
       enableFeedback: true,
       position: PopupMenuPosition.under,
       itemBuilder: (BuildContext context) {

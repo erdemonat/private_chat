@@ -26,7 +26,16 @@ class _ProfileScreenState extends State<ProfileScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Profile', style: kAppbarTitle),
+        leading: IconButton(
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+          icon: const Icon(Icons.arrow_back_ios_new_outlined),
+          color: Theme.of(context).colorScheme.secondary,
+        ),
+        title: Text('Profile',
+            style: kAppbarTitle.copyWith(
+                color: Theme.of(context).colorScheme.secondary)),
         backgroundColor: Colors.transparent,
         bottom: const PreferredSize(
           preferredSize: Size.fromHeight(1),

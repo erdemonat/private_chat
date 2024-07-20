@@ -61,6 +61,7 @@ exports.sendNotification = onDocumentCreated(
           body: message.text,
           icon: "default",
           click_action: "FLUTTER_NOTIFICATION_CLICK",
+          sound: "assets/sounds/sound2.mp3",
         },
       };
 

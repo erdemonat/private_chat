@@ -9,6 +9,7 @@ import 'package:privatechat/providers/chat_room_state.dart';
 import 'package:privatechat/providers/firestore_service.dart';
 import 'package:privatechat/theme/constants.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class ChatScreen extends StatefulWidget {
   final String recipientUserId;
@@ -34,6 +35,11 @@ class ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
   String? recipientImageUrl;
   String? chatRoomId;
   String currentUser = FirebaseAuth.instance.currentUser!.uid;
+
+  Future<String> _getSelectedSound() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    return prefs.getString('selectedNotificationSound') ?? 'default';
+  }
 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) async {
@@ -130,11 +136,13 @@ class ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
   }
 
   void sendMessage(String messageText) async {
+    String selectedSound = await _getSelectedSound();
     if (chatRoomId != null && messageText.isNotEmpty) {
       var messageData = {
         'text': messageText,
         'senderId': _auth.currentUser!.uid,
         'receiverId': widget.recipientUserId,
+        'selectedSound': selectedSound,
         'timestamp': FieldValue.serverTimestamp(),
         'isRead': Provider.of<ChatRoomState>(context, listen: false).isOnline
             ? true
@@ -177,16 +185,18 @@ class ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
       child: Scaffold(
         appBar: AppBar(
           leading: IconButton(
-              onPressed: () {
-                Navigator.pop(context);
-                _db.collection('chats').doc(chatRoomId).update(
-                  {
-                    'newMessageCounter-${widget.recipientUserId}': 0,
-                    'isOnChat-${_auth.currentUser!.uid}': false
-                  },
-                );
-              },
-              icon: const Icon(Icons.arrow_back)),
+            onPressed: () {
+              Navigator.pop(context);
+              _db.collection('chats').doc(chatRoomId).update(
+                {
+                  'newMessageCounter-${widget.recipientUserId}': 0,
+                  'isOnChat-${_auth.currentUser!.uid}': false
+                },
+              );
+            },
+            icon: const Icon(Icons.arrow_back_ios_new_outlined),
+            color: Theme.of(context).colorScheme.secondary,
+          ),
           actions: [
             Padding(
               padding: const EdgeInsets.only(right: 20),

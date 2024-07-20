@@ -12,10 +12,10 @@ enum AppTheme {
 
 class ThemeProvider with ChangeNotifier {
   final IsarService isarService = IsarService();
-  ThemeData _themeData = blackTheme;
+  ThemeData _themeData = darkTheme;
   final Map<AppTheme, ThemeData> _themes = {
-    AppTheme.black: blackTheme,
-    AppTheme.white: whiteTheme,
+    AppTheme.black: darkTheme,
+    AppTheme.white: lightTheme,
     AppTheme.contrast: highContrastTheme,
   };
 

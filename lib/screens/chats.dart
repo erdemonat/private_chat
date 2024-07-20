@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:privatechat/components/chat_list_tile.dart';
+import 'package:privatechat/components/no_contact_found_img.dart';
 import 'package:privatechat/providers/firestore_service.dart';
 import 'package:privatechat/model/custom_page_router.dart';
 import 'package:privatechat/model/last_message_data.dart';
@@ -53,60 +54,78 @@ class _ChatsScreenState extends State<ChatsScreen> {
     var chatDocs = Provider.of<List<DocumentSnapshot>>(context);
 
 //Listview  top padding !!
-    return ListView.builder(
-      itemCount: chatDocs.length,
-      itemBuilder: (context, index) {
-        var chatDoc = chatDocs[index];
-        var chatRoomId = chatDoc.id;
-        var participants = chatDoc["participants"];
-        var recipientUserId = participants.length == 1
-            ? currentUser
-            : participants.firstWhere(
-                (id) => id != currentUser,
-                orElse: () => currentUser,
-              );
-        return MultiProvider(
-          providers: [
-            StreamProvider<UserData>.value(
-              value: FirestoreService().getUserStream(recipientUserId),
-              initialData: UserData.initial(),
-            ),
-            StreamProvider<LastMessageData>.value(
-              value: FirestoreService().getLastMessage(chatRoomId).map(
-                    (snapshot) => LastMessageData.fromSnapshot(snapshot),
-                  ),
-              initialData: LastMessageData.initial(),
-            ),
-          ],
-          child: Consumer2<UserData, LastMessageData>(
-            builder: (context, userData, messageData, child) {
-              return ChatListTile(
-                recipientUsername:
-                    currentUser != recipientUserId ? userData.username : 'You',
-                recipientImageUrl: userData.imageUrl,
-                lastMessage: messageData.messageText,
-                lastMessageTimestamp: messageData.timestamp,
-                newMessageCounter:
-                    chatDoc["newMessageCounter-$recipientUserId"],
-                onTap: () {
-                  Navigator.of(context).push(
-                    CustomPageRoute(
-                      page: ChatScreen(
-                        recipientUserId: recipientUserId,
-                        recipientUsername: userData.username,
-                        recipientImageUrl: userData.imageUrl,
-                        chatRoomId: chatDoc.id,
-                      ),
-                    ),
+    if (chatDocs.isNotEmpty) {
+      return Padding(
+        padding: const EdgeInsets.only(top: 12),
+        child: ListView.builder(
+          itemCount: chatDocs.length,
+          itemBuilder: (context, index) {
+            var chatDoc = chatDocs[index];
+            var chatRoomId = chatDoc.id;
+            var participants = chatDoc["participants"];
+            var recipientUserId = participants.length == 1
+                ? currentUser
+                : participants.firstWhere(
+                    (id) => id != currentUser,
+                    orElse: () => currentUser,
                   );
-                  updateOnlineStatusMessageCounter(chatDoc.id, recipientUserId);
-                  markMessageAsRead(chatDoc.id, messageData.messageText);
+            return MultiProvider(
+              providers: [
+                StreamProvider<UserData>.value(
+                  value: FirestoreService().getUserStream(recipientUserId),
+                  initialData: UserData.initial(),
+                ),
+                StreamProvider<LastMessageData>.value(
+                  value: FirestoreService().getLastMessage(chatRoomId).map(
+                        (snapshot) => LastMessageData.fromSnapshot(snapshot),
+                      ),
+                  initialData: LastMessageData.initial(),
+                ),
+              ],
+              child: Consumer2<UserData, LastMessageData>(
+                builder: (context, userData, messageData, child) {
+                  return ChatListTile(
+                    recipientUsername: currentUser != recipientUserId
+                        ? userData.username
+                        : 'You',
+                    recipientImageUrl: userData.imageUrl,
+                    lastMessage: messageData.messageText,
+                    lastMessageTimestamp: messageData.timestamp,
+                    newMessageCounter:
+                        chatDoc["newMessageCounter-$recipientUserId"],
+                    onTap: () {
+                      Navigator.of(context).push(
+                        CustomPageRoute(
+                          page: ChatScreen(
+                            recipientUserId: recipientUserId,
+                            recipientUsername: userData.username,
+                            recipientImageUrl: userData.imageUrl,
+                            chatRoomId: chatDoc.id,
+                          ),
+                        ),
+                      );
+                      updateOnlineStatusMessageCounter(
+                          chatDoc.id, recipientUserId);
+                      markMessageAsRead(chatDoc.id, messageData.messageText);
+                    },
+                  );
                 },
-              );
-            },
-          ),
-        );
-      },
-    );
+              ),
+            );
+          },
+        ),
+      );
+    } else {
+      return const Center(
+        child: NoContactsFound(
+          title: 'Ready for your first chat',
+          subtitle: 'Hop over to contacts,\n',
+          richTextChildren: [
+            TextSpan(text: 'type the username,'),
+            TextSpan(text: 'and let the chat begin!'),
+          ],
+        ),
+      );
+    }
   }
 }
