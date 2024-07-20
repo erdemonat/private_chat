@@ -19,6 +19,8 @@ extension CustomColors on ThemeData {
 }
 
 ThemeData darkTheme = ThemeData(
+  searchBarTheme:
+      SearchBarThemeData(backgroundColor: WidgetStatePropertyAll(Colors.red)),
   textTheme: GoogleFonts.poppinsTextTheme(),
   scaffoldBackgroundColor: const Color.fromARGB(255, 18, 25, 33),
   dialogBackgroundColor: const Color.fromARGB(255, 18, 25, 33),
